@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Conecte-se - Transporte Escolar</title>
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: #fef7e8; /* Creme */
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 30px 10px;
+    }
+
+    .tela {
+      display: none;
+      background: #fff;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .ativa {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #f9f9f9;
+      transition: border 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    .btn {
+      width: 100%;
+      background: #3498db;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background: #2980b9;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #fdfdfd;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      margin-top: 15px;
+    }
+
+    .mapa {
+      height: 200px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .onibus {
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 90px;
+      left: 10px;
+      animation: mover 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes mover {
+      from { left: 10px; }
+      to { left: 85%; }
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 150px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Tela de Login -->
+  <section class="tela ativa" id="telaLogin">
+    <img src="bad8b75e-90d2-4d9d-b6a0-66baba0d8b9f.png" alt="Logo Conecte-se" class="logo">
+    <h2>Login</h2>
+    <input type="text" placeholder="Usuário ou Email" id="usuario">
+    <input type="password" placeholder="Senha" id="senha">
+    <button class="btn" onclick="irParaCadastro()">Entrar</button>
+  </section>
+
+  <!-- Tela de Cadastro -->
+  <section class="tela" id="telaCadastro">
+    <h2>Cadastro do Estudante</h2>
+    <input type="text" placeholder="Fazenda onde mora">
+    <select>
+      <option value="">Selecione a escola</option>
+      <option>Escola Estadual Pedro II</option>
+      <option>Escola Municipal Eloy</option>
+      <option>Escola Municipal Marta</option>
+    </select>
+    <input type="text" placeholder="Número da Matrícula">
+    <input type="text" placeholder="Nome completo do Estudante">
+    <button class="btn" onclick="irParaMenu()">Salvar e Continuar</button>
+  </section>
+
+  <!-- Tela Principal (Menu) -->
+  <section class="tela" id="telaMenu">
+    <h2>Menu Principal</h2>
+    <div class="menu">
+      <button class="btn" onclick="mostrarTela('telaRastreio')">📍 Rastreio</button>
+      <button class="btn" onclick="mostrarTela('telaRota')">🗺️ Mapeamento de Rota</button>
+      <button class="btn" onclick="mostrarTela('telaChecklist')">🛠️ Checklist</button>
+      <button class="btn" onclick="mostrarTela('telaFeedback')">💬 Feedback</button>
+    </div>
+  </section>
+
+  <!-- Tela Rastreio -->
+  <section class="tela" id="telaRastreio">
+    <h2>Rastreio do Ônibus</h2>
+    <div class="mapa">
+      <div class="onibus"></div>
+    </div>
+    <p style="margin-top: 10px;">Ônibus está a caminho da fazenda Cabugi.</p>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
+
+  <!-- Tela Mapeamento de Rota -->
+  <section class="tela" id="telaRota">
+    <h2>Rotas Atendidas</h2>
+    <div class="card">
+      <p><strong>Fazendas:</strong></p>
+      <ul>
+        <li>Boa Vista</li>
+        <li>Caraúbas</li>
+        <li>3 de Agosto</li>
+      </ul>
+      <p><strong>Escolas:</strong> Pedro II, Eloy, Marta</p>
+    </div>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
+
+  <!-- Tela Checklist -->
+  <section class="tela" id="telaChecklist">
+    <h2>Informações de Manutenção</h2>
+    <div class="card">
+      <p><strong>Último Registro:</strong> 12/07/2025</p>
+      <p><strong>Status:</strong> Pneu furado - rota Cabugi</p>
+      <p><strong>Manutenção:</strong> Em andamento</p>
+    </div>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
+
+  <!-- Tela Feedback -->
+  <section class="tela" id="telaFeedback">
+    <h2>Enviar Feedback</h2>
+    <textarea rows="5" placeholder="Digite aqui sugestões, críticas ou avaliações..."></textarea>
+    <button class="btn" onclick="enviarFeedback()">Enviar</button>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
+
+  <script>
+    function mostrarTela(id) {
+      document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+      document.getElementById(id).classList.add('ativa');
+    }
+
+    function irParaCadastro() {
+      mostrarTela('telaCadastro');
+    }
+
+    function irParaMenu() {
+      mostrarTela('telaMenu');
+    }
+
+    function enviarFeedback() {
+      alert("Feedback enviado com sucesso! Obrigado pela sua contribuição.");
+      mostrarTela('telaMenu');
+    }
+  </script>
+</body>
+</html>
