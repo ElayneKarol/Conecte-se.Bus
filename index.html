@@ -216,6 +216,25 @@
       margin: 0 auto 20px;
       max-width: 150px;
     }
+
+    #mapRastreio {
+  background: #e6e6e6;
+  margin-top: 10px;
+  transition: opacity 0.3s ease;
+}
+
+#seletorOnibus {
+  margin: 10px 0 20px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#legendaRastreio p {
+  margin-bottom: 6px;
+}
+
   </style>
 </head>
 <body>
@@ -249,6 +268,13 @@
     </select>
     <input type="text" placeholder="Número da Matrícula">
     <input type="text" placeholder="Nome completo do Estudante">
+    <select id="onibusSelecionado">
+  <option value="">Selecione o ônibus do aluno</option>
+  <option value="01">Ônibus 01</option>
+  <option value="02">Ônibus 02</option>
+  <option value="03">Ônibus 03</option>
+</select>
+
     <button class="btn" onclick="irParaMenu()">Salvar e Continuar</button>
   </section>
 
@@ -257,22 +283,29 @@
     <h2>Menu Principal</h2>
     <div class="menu">
       <button class="btn" onclick="mostrarTela('telaRastreio')">📍 Rastreio</button>
-      <button class="btn" onclick="mostrarTela('telaRota')">🗺️ Mapeamento de Rota</button>
+<button class="btn" onclick="mostrarTela('telaRotaDetalhada')">🛣️ Mapeamento de Rota</button>
       <button class="btn" onclick="mostrarTela('telaChecklist')">🛠️ Checklist</button>
       <button class="btn" onclick="mostrarTela('telaFeedback')">💬 Feedback</button>
+      <button class="btn" onclick="mostrarTela('telaNotificacoes')">🔔 Notificações</button>
+
     </div>
   </section>
 
-<!-- Rastreio com mapa interativo estilo Uber -->
+<!-- Tela Rastreio com seletor e mapa -->
 <section class="tela" id="telaRastreio">
-  <h2>Rastreio em Tempo Real</h2>
-  <div id="mapaRastreio" style="height: 300px; border-radius: 10px; margin-bottom: 15px;"></div>
+  <h2>Rastreamento do Ônibus</h2>
 
-  <div class="card">
-    <p><strong>Legenda de Rota:</strong></p>
-    <ul>
-      <li>Ônibus - Rota Cabugi → Escola Pedro II</li>
-    </ul>
+  <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
+  <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
+    <option value="01">Ônibus 01</option>
+    <option value="02">Ônibus 02</option>
+    <option value="03">Ônibus 03</option>
+  </select>
+
+  <div id="mapRastreio" style="height: 280px; border-radius: 10px; margin: 15px 0;"></div>
+
+  <div class="card" id="legendaRastreio">
+    <!-- Será preenchido dinamicamente -->
   </div>
 
   <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
@@ -281,19 +314,57 @@
 
 
   <!-- Tela Mapeamento de Rota -->
-  <section class="tela" id="telaRota">
-    <h2>Rotas Atendidas</h2>
-    <div class="card">
-      <p><strong>Fazendas:</strong></p>
-      <ul>
-        <li>Boa Vista</li>
-        <li>Caraúbas</li>
-        <li>3 de Agosto</li>
-      </ul>
-      <p><strong>Escolas:</strong> Pedro II, Eloy, Marta</p>
+<section class="tela" id="telaRota">
+  <h2>Mapeamento de Rotas</h2>
+
+  <div class="card">
+    <p><strong>Ônibus 01 - Rota Boa Vista → Escola Pedro II</strong></p>
+    <ul>
+      <li>🕒 Sai da garagem: 06:30</li>
+      <li>🕒 Passa na Fazenda Boa Vista: 06:50</li>
+      <li>🕒 Chega na Escola Pedro II: 07:10</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <p><strong>Ônibus 02 - Rota Caraúbas → Escola Marta</strong></p>
+    <ul>
+      <li>🕒 Sai da garagem: 06:20</li>
+      <li>🕒 Passa na Fazenda Caraúbas: 06:40</li>
+      <li>🕒 Chega na Escola Marta: 07:00</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <p><strong>Ônibus 03 - Rota 3 de Agosto → Escola Eloy</strong></p>
+    <ul>
+      <li>🕒 Sai da garagem: 06:15</li>
+      <li>🕒 Passa na Fazenda 3 de Agosto: 06:35</li>
+      <li>🕒 Chega na Escola Eloy: 06:55</li>
+    </ul>
+  </div>
+
+  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+</section>
+<section class="tela" id="telaRotaDetalhada">
+  <h2>Rota: Boa Vista → Escola Pedro II</h2>
+
+  <div id="mapRotaDetalhada" style="height: 280px; border-radius: 10px; margin-bottom: 20px;"></div>
+
+  <div class="card">
+    <p><strong>Ponto atual:</strong> Fazenda Boa Vista</p>
+    <p><strong>Horário agendado:</strong> 🕒 06:50</p>
+    <p><strong>Previsão de chegada:</strong> 🕒 07:10</p>
+
+    <div style="margin-top: 10px;">
+      <button class="btn" onclick="alert('A rota completa será exibida em breve.')">📍 Visualizar rota</button>
+      <button class="btn" onclick="alert('Chegada prevista às 07:10. Nenhum atraso no momento.')">🔔 Atualizações de chegada</button>
     </div>
-    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-  </section>
+  </div>
+
+  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+</section>
+
 
   <!-- Tela Checklist -->
   <section class="tela" id="telaChecklist">
@@ -314,18 +385,31 @@
     <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
   </section>
 
+  <!-- Tela Notificações -->
+<section class="tela" id="telaNotificacoes">
+  <h2>Notificações do Ônibus do Aluno</h2>
+  <div id="notificacoesContainer"></div>
+  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+</section>
+
+</section>
+
   <script>
-    function mostrarTela(id) {
+  function mostrarTela(id) {
   document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
   document.getElementById(id).classList.add('ativa');
 
-  // Se for a tela de rastreio, atualiza o mapa
   if (id === "telaRastreio" && typeof map !== "undefined") {
     setTimeout(() => {
       map.invalidateSize();
-    }, 200); // pequeno delay para garantir que a div esteja visível
+    }, 200);
+  }
+
+  if (id === "telaNotificacoes") {
+    gerarNotificacoes();
   }
 }
+
 
 
     function irParaCadastro() {
@@ -333,8 +417,16 @@
     }
 
     function irParaMenu() {
-      mostrarTela('telaMenu');
-    }
+  const onibus = document.getElementById('onibusSelecionado').value;
+  if (!onibus) {
+    alert("Por favor, selecione o ônibus do aluno.");
+    return;
+  }
+
+  localStorage.setItem("onibusAluno", onibus);
+  mostrarTela('telaMenu');
+}
+
 
     function enviarFeedback() {
       alert("Feedback enviado com sucesso! Obrigado pela sua contribuição.");
@@ -343,6 +435,69 @@
   </script>
 </body>
 <script>
+  let mapaRota;
+
+  function carregarMapaRotaDetalhada() {
+    // Só inicializa uma vez
+    if (mapaRota) {
+      setTimeout(() => {
+        mapaRota.invalidateSize();
+      }, 200);
+      return;
+    }
+
+    mapaRota = L.map('mapRotaDetalhada').setView([-5.694, -36.245], 14);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap',
+    }).addTo(mapaRota);
+
+    const rota = [
+      [-5.698, -36.252], // garagem
+      [-5.695, -36.248], // boa vista
+      [-5.693, -36.243], // escola
+    ];
+
+    // Traçar linha da rota
+    L.polyline(rota, { color: 'green', weight: 5 }).addTo(mapaRota);
+
+    // Ícone de ônibus
+    const onibusIcone = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+    });
+
+    // Posição atual do ônibus (simulação em Boa Vista)
+    L.marker(rota[1], { icon: onibusIcone }).addTo(mapaRota).bindPopup("Ônibus - Fazenda Boa Vista");
+  }
+
+  // Chamar mapa ao abrir a tela
+  function mostrarTela(id) {
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+
+  if (id === "telaRastreio") {
+    const salvo = localStorage.getItem("onibusAluno");
+    if (salvo) {
+      document.getElementById("seletorOnibus").value = salvo;
+    }
+
+    setTimeout(() => {
+      if (!mapaRastreio) {
+        carregarMapaRastreio();
+      } else {
+        mapaRastreio.invalidateSize();
+        atualizarRotaSelecionada(); // força atualização de marcador e legenda
+      }
+    }, 200);
+  }
+
+  if (id === "telaNotificacoes") gerarNotificacoes();
+  if (id === "telaRotaDetalhada") carregarMapaRotaDetalhada();
+}
+
+
   // Inicializar mapa centrado em Lajes (RN)
   let map = L.map('mapaRastreio').setView([-5.6936, -36.2439], 14);
 
@@ -376,6 +531,143 @@
     marker.setLatLng(latlngs[index]);
     map.panTo(latlngs[index]);
   }, 2000);
+
+  function gerarNotificacoes() {
+  const onibus = localStorage.getItem("onibusAluno");
+  const container = document.getElementById("notificacoesContainer");
+  container.innerHTML = "";
+
+  const dados = {
+    "01": [
+      { tipo: "✅", texto: "Ônibus 01 passou por manutenção preventiva na garagem.", data: "17/07/2025 - 16:10" }
+    ],
+    "02": [
+      { tipo: "⚠️", texto: "Ônibus 02 atrasado no ponto do Sítio Três Lagoas — Falha no motor", data: "17/07/2025 - 06:20" }
+    ],
+    "03": [
+      { tipo: "⚠️", texto: "Ônibus 03 parado próximo à Fazenda Caraúbas — Pneu furado", data: "18/07/2025 - 07:42" }
+    ]
+  };
+
+  if (dados[onibus]) {
+    dados[onibus].forEach(n => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<p>${n.tipo} ${n.texto}<br><small>${n.data}</small></p>`;
+      container.appendChild(div);
+    });
+  } else {
+    container.innerHTML = "<p>Nenhuma notificação para este ônibus.</p>";
+  }
+}
+
+  let mapaRastreio;
+  let marcadorRota;
+  let linhaRota;
+
+  const rotas = {
+    "01": {
+      nome: "Rota Boa Vista → Escola Pedro II",
+      pontoAtual: "Fazenda Boa Vista",
+      horario: "06:50",
+      chegada: "07:10",
+      coordenadas: [
+        [-5.698, -36.252], // Garagem
+        [-5.695, -36.248], // Fazenda Boa Vista
+        [-5.693, -36.243]  // Escola Pedro II
+      ]
+    },
+    "02": {
+      nome: "Rota Caraúbas → Escola Marta",
+      pontoAtual: "Fazenda Caraúbas",
+      horario: "06:40",
+      chegada: "07:00",
+      coordenadas: [
+        [-5.699, -36.255],
+        [-5.697, -36.250],
+        [-5.695, -36.245]
+      ]
+    },
+    "03": {
+      nome: "Rota 3 de Agosto → Escola Eloy",
+      pontoAtual: "Fazenda 3 de Agosto",
+      horario: "06:35",
+      chegada: "06:55",
+      coordenadas: [
+        [-5.700, -36.260],
+        [-5.698, -36.256],
+        [-5.696, -36.250]
+      ]
+    }
+  };
+
+  function carregarMapaRastreio() {
+    // Inicializa apenas uma vez
+    if (!mapaRastreio) {
+      mapaRastreio = L.map('mapRastreio').setView([-5.694, -36.245], 14);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap'
+      }).addTo(mapaRastreio);
+    }
+
+    atualizarRotaSelecionada();
+  }
+
+  function atualizarRotaSelecionada() {
+    const id = document.getElementById("seletorOnibus").value;
+    const rota = rotas[id];
+
+    if (!rota) return;
+
+    // Remove elementos antigos do mapa
+    if (linhaRota) mapaRastreio.removeLayer(linhaRota);
+    if (marcadorRota) mapaRastreio.removeLayer(marcadorRota);
+
+    // Adiciona nova rota
+    linhaRota = L.polyline(rota.coordenadas, { color: 'green', weight: 5 }).addTo(mapaRastreio);
+
+    const onibusIcone = L.icon({
+      iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+    });
+
+    // Posição atual do ônibus (simulada)
+    marcadorRota = L.marker(rota.coordenadas[1], { icon: onibusIcone }).addTo(mapaRastreio);
+
+    // Centraliza o mapa na nova rota
+    mapaRastreio.panTo(rota.coordenadas[1]);
+
+    // Atualiza legenda
+    document.getElementById("legendaRastreio").innerHTML = `
+      <p><strong>${rota.nome}</strong></p>
+      <p><strong>Ponto atual:</strong> ${rota.pontoAtual}</p>
+      <p><strong>Horário agendado:</strong> 🕒 ${rota.horario}</p>
+      <p><strong>Previsão de chegada:</strong> 🕒 ${rota.chegada}</p>
+    `;
+  }
+
+  function mostrarTela(id) {
+    document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+    document.getElementById(id).classList.add('ativa');
+
+    if (id === "telaRastreio") {
+      const salvo = localStorage.getItem("onibusAluno");
+      if (salvo) {
+        document.getElementById("seletorOnibus").value = salvo;
+      }
+      setTimeout(() => {
+        carregarMapaRastreio();
+        mapaRastreio.invalidateSize();
+      }, 200);
+    }
+
+    if (id === "telaNotificacoes") gerarNotificacoes();
+    if (id === "telaRotaDetalhada") carregarMapaRotaDetalhada();
+  }
+</script>
+
 </script>
 
 </html>
