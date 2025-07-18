@@ -2,8 +2,92 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Leaflet.js (biblioteca de mapa) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <title>Conecte-se - Transporte Escolar</title>
   <style>
+
+    .input-icon {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon i {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.input-icon input {
+  padding-left: 40px !important; /* espaço pro ícone */
+}
+
+    /* Estilo novo do mapa com ônibus numerados */
+.mapa-complexa {
+  height: 250px;
+  background-image: url("mapa.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  position: relative;
+  margin: 20px 0;
+  overflow: hidden;
+  border: 2px solid #3498db;
+}
+
+
+.onibus-num {
+  width: 35px;
+  height: 35px;
+  background: #e74c3c;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation-timing-function: ease-in-out;
+}
+
+.onibus01 {
+  top: 30px;
+  left: 10px;
+  animation: moverOnibus1 6s infinite alternate;
+}
+
+.onibus02 {
+  top: 100px;
+  left: 20px;
+  animation: moverOnibus2 8s infinite alternate;
+}
+
+.onibus03 {
+  top: 170px;
+  left: 5px;
+  animation: moverOnibus3 5s infinite alternate;
+}
+
+@keyframes moverOnibus1 {
+  from { left: 10px; }
+  to { left: 80%; }
+}
+
+@keyframes moverOnibus2 {
+  from { left: 20px; }
+  to { left: 60%; }
+}
+
+@keyframes moverOnibus3 {
+  from { left: 5px; }
+  to { left: 70%; }
+}
+
     * {
       margin: 0; padding: 0;
       box-sizing: border-box;
@@ -25,7 +109,7 @@
       background: #fff;
       padding: 30px 20px;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(67, 65, 65, 0.1);
       width: 100%;
       max-width: 400px;
     }
@@ -138,10 +222,18 @@
 
   <!-- Tela de Login -->
   <section class="tela ativa" id="telaLogin">
-    <img src="bad8b75e-90d2-4d9d-b6a0-66baba0d8b9f.png" alt="Logo Conecte-se" class="logo">
+    <img src="assets/img/conecte-se.png" alt="Logo Conecte-se" class="logo">
     <h2>Login</h2>
-    <input type="text" placeholder="Usuário ou Email" id="usuario">
-    <input type="password" placeholder="Senha" id="senha">
+    <div class="input-icon">
+  <i class="fas fa-user"></i>
+  <input type="text" placeholder="Username" id="usuario">
+</div>
+
+<div class="input-icon">
+  <i class="fas fa-lock"></i>
+  <input type="password" placeholder="Password" id="senha">
+</div>
+
     <button class="btn" onclick="irParaCadastro()">Entrar</button>
   </section>
 
@@ -171,15 +263,22 @@
     </div>
   </section>
 
-  <!-- Tela Rastreio -->
-  <section class="tela" id="telaRastreio">
-    <h2>Rastreio do Ônibus</h2>
-    <div class="mapa">
-      <div class="onibus"></div>
-    </div>
-    <p style="margin-top: 10px;">Ônibus está a caminho da fazenda Cabugi.</p>
-    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-  </section>
+<!-- Rastreio com mapa interativo estilo Uber -->
+<section class="tela" id="telaRastreio">
+  <h2>Rastreio em Tempo Real</h2>
+  <div id="mapaRastreio" style="height: 300px; border-radius: 10px; margin-bottom: 15px;"></div>
+
+  <div class="card">
+    <p><strong>Legenda de Rota:</strong></p>
+    <ul>
+      <li>Ônibus - Rota Cabugi → Escola Pedro II</li>
+    </ul>
+  </div>
+
+  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+</section>
+
+
 
   <!-- Tela Mapeamento de Rota -->
   <section class="tela" id="telaRota">
@@ -217,9 +316,17 @@
 
   <script>
     function mostrarTela(id) {
-      document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
-      document.getElementById(id).classList.add('ativa');
-    }
+  document.querySelectorAll('.tela').forEach(t => t.classList.remove('ativa'));
+  document.getElementById(id).classList.add('ativa');
+
+  // Se for a tela de rastreio, atualiza o mapa
+  if (id === "telaRastreio" && typeof map !== "undefined") {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 200); // pequeno delay para garantir que a div esteja visível
+  }
+}
+
 
     function irParaCadastro() {
       mostrarTela('telaCadastro');
@@ -235,4 +342,40 @@
     }
   </script>
 </body>
+<script>
+  // Inicializar mapa centrado em Lajes (RN)
+  let map = L.map('mapaRastreio').setView([-5.6936, -36.2439], 14);
+
+  // Camada do mapa OpenStreetMap
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap',
+  }).addTo(map);
+
+  // Ícone customizado de ônibus
+  const busIcon = L.icon({
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/61/61231.png',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15],
+    popupAnchor: [0, -15]
+  });
+
+  // Posição inicial do ônibus
+  let latlngs = [
+    [-5.697, -36.250],
+    [-5.695, -36.247],
+    [-5.694, -36.243],
+    [-5.6936, -36.2439], // Escola Pedro II
+  ];
+
+  let index = 0;
+  let marker = L.marker(latlngs[0], { icon: busIcon }).addTo(map).bindPopup("Ônibus - Rota Cabugi");
+
+  // Simular movimento a cada 2 segundos
+  setInterval(() => {
+    index = (index + 1) % latlngs.length;
+    marker.setLatLng(latlngs[index]);
+    map.panTo(latlngs[index]);
+  }, 2000);
+</script>
+
 </html>
