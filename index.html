@@ -2,6 +2,12 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
+  <!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <!-- Leaflet.js (biblioteca de mapa) -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -490,7 +496,7 @@
         mapaRastreio.invalidateSize();
         atualizarRotaSelecionada(); // força atualização de marcador e legenda
       }
-    }, 200);
+    }, 300);
   }
 
   if (id === "telaNotificacoes") gerarNotificacoes();
@@ -611,13 +617,19 @@ let animacaoInterval;
 function carregarMapaRastreio() {
   if (!mapaRastreio) {
     mapaRastreio = L.map('mapRastreio').setView([-5.694, -36.245], 14);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
+      attribution: '© OpenStreetMap contributors'
     }).addTo(mapaRastreio);
   }
 
+  setTimeout(() => {
+    mapaRastreio.invalidateSize(); // 💡 ESSENCIAL para corrigir tela cinza!
+  }, 200);
+
   atualizarRotaSelecionada();
 }
+
 
 function atualizarRotaSelecionada() {
   const id = document.getElementById("seletorOnibus").value;
