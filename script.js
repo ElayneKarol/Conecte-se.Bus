@@ -141,3 +141,56 @@ function mostrarTela(id) {
   if (id === "telaNotificacoes") gerarNotificacoes();
   if (id === "telaRotaDetalhada") carregarMapaRotaDetalhada();
 }
+
+//login
+function irParaCadastro() {
+  mostrarTela('telaCadastro');
+}
+
+//cadastro
+function irParaMenu() {
+  const onibus = document.getElementById('onibusSelecionado').value;
+  if (!onibus) {
+    alert("Por favor, selecione o ônibus do aluno.");
+    return;
+  }
+
+  localStorage.setItem("onibusAluno", onibus);
+  mostrarTela('telaMenu');
+}
+
+//feedback
+function enviarFeedback() {
+  alert("Feedback enviado com sucesso! Obrigado pela sua contribuição.");
+  mostrarTela('telaMenu');
+}
+
+//noti
+function gerarNotificacoes() {
+  const onibus = localStorage.getItem("onibusAluno");
+  const container = document.getElementById("notificacoesContainer");
+  container.innerHTML = "";
+
+  const dados = {
+    "01": [
+      { tipo: "✅", texto: "Ônibus 01 passou por manutenção preventiva na garagem.", data: "17/07/2025 - 16:10" }
+    ],
+    "02": [
+      { tipo: "⚠️", texto: "Ônibus 02 atrasado no ponto do Sítio Três Lagoas — Falha no motor", data: "17/07/2025 - 06:20" }
+    ],
+    "03": [
+      { tipo: "⚠️", texto: "Ônibus 03 parado próximo à Fazenda Caraúbas — Pneu furado", data: "18/07/2025 - 07:42" }
+    ]
+  };
+
+  if (dados[onibus]) {
+    dados[onibus].forEach(n => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<p>${n.tipo} ${n.texto}<br><small>${n.data}</small></p>`;
+      container.appendChild(div);
+    });
+  } else {
+    container.innerHTML = "<p>Nenhuma notificação para este ônibus.</p>";
+  }
+}
