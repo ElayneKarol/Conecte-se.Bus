@@ -76,23 +76,35 @@ function atualizarRotaSelecionada() {
     }).addTo(mapaRastreio).bindPopup(nomes[i]);
   });
 
-  const onibusIcone = L.icon({
-    iconUrl: "https://cdn-icons-png.flaticon.com/512/61/61231.png",
-    iconSize: [30, 30],
-    iconAnchor: [15, 15]
-  });
+ const onibusIcone = L.icon({
+  iconUrl: "assets/img/bus.png", // Ícone de ônibus real
+  iconSize: [36, 36],
+  iconAnchor: [18, 18]
+});
 
   indiceRota = 0;
+
+  // Adiciona o marcador do ônibus com ícone personalizado
   marcadorRota = L.marker(rotaAtual.coordenadas[indiceRota], { icon: onibusIcone }).addTo(mapaRastreio);
   mapaRastreio.panTo(rotaAtual.coordenadas[indiceRota]);
 
+  // Inicia a animação do ônibus
   animarOnibus();
-  atualizarLegenda();
+
+  // Atualiza painel com informações da rota
+  document.getElementById("legendaRastreio").innerHTML = `
+    <p><strong>${rotaAtual.nome}</strong></p>
+    <p><strong>Status:</strong> Em movimento</p>
+    <p><strong>Ponto atual:</strong> ${rotaAtual.pontoAtual}</p>
+    <p><strong>Saída da garagem:</strong> 🕒 ${rotaAtual.horario}</p>
+    <p><strong>Chegada prevista:</strong> 🕒 ${rotaAtual.chegada}</p>
+  `;
 }
 
 // Anima o ônibus ao longo da rota
 function animarOnibus() {
   const coords = rotaAtual.coordenadas;
+
   animacaoInterval = setInterval(() => {
     indiceRota++;
     if (indiceRota >= coords.length) {
@@ -100,11 +112,21 @@ function animarOnibus() {
       document.getElementById("legendaRastreio").innerHTML += `<p><strong>Status:</strong> Chegou ao destino</p>`;
       return;
     }
+
     marcadorRota.setLatLng(coords[indiceRota]);
     mapaRastreio.panTo(coords[indiceRota]);
-    atualizarLegenda();
+
+    const pontos = ["Garagem", rotaAtual.pontoAtual, "Escola"];
+    document.getElementById("legendaRastreio").innerHTML = `
+      <p><strong>${rotaAtual.nome}</strong></p>
+      <p><strong>Status:</strong> Em movimento</p>
+      <p><strong>Ponto atual:</strong> ${pontos[indiceRota]}</p>
+      <p><strong>Saída da garagem:</strong> 🕒 ${rotaAtual.horario}</p>
+      <p><strong>Chegada prevista:</strong> 🕒 ${rotaAtual.chegada}</p>
+    `;
   }, 2500);
 }
+
 
 // Atualiza o painel informativo
 function atualizarLegenda() {
@@ -129,17 +151,25 @@ function mostrarTela(id) {
       document.getElementById("seletorOnibus").value = salvo;
     }
 
+    // Espera a tela ser exibida, depois carrega ou atualiza mapa
     setTimeout(() => {
-      if (!mapaRastreio) carregarMapaRastreio();
-      else {
+      if (!mapaRastreio) {
+        carregarMapaRastreio();
+      } else {
         mapaRastreio.invalidateSize();
         atualizarRotaSelecionada();
       }
     }, 300);
   }
 
+  if (id === "telaRotaDetalhada") {
+  setTimeout(() => {
+    carregarMapaRotaDetalhada();
+    mapaRotaDetalhada.invalidateSize();
+  }, 300);
+}
+
   if (id === "telaNotificacoes") gerarNotificacoes();
-  if (id === "telaRotaDetalhada") carregarMapaRotaDetalhada();
 }
 
 //login
@@ -193,4 +223,40 @@ function gerarNotificacoes() {
   } else {
     container.innerHTML = "<p>Nenhuma notificação para este ônibus.</p>";
   }
+}
+
+function carregarMapaRotaDetalhada() {
+  if (window.mapaRotaDetalhada) {
+    setTimeout(() => {
+      mapaRotaDetalhada.invalidateSize();
+    }, 300);
+    return;
+  }
+
+  mapaRotaDetalhada = L.map('mapRotaDetalhada').setView([-5.695, -36.247], 14);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors'
+  }).addTo(mapaRotaDetalhada);
+
+  const rota = [
+    [-5.698, -36.252], // 🚍 Garagem
+    [-5.695, -36.248], // 📍 Fazenda Boa Vista
+    [-5.693, -36.243]  // 🏫 Escola Pedro II
+  ];
+
+  const nomes = ["Garagem", "Fazenda Boa Vista", "Escola Pedro II"];
+  const icones = ["🚍", "📍", "🏫"];
+
+  // Marcadores
+  rota.forEach((coord, i) => {
+    L.marker(coord).addTo(mapaRotaDetalhada)
+      .bindPopup(`<strong>${icones[i]} ${nomes[i]}</strong>`);
+  });
+
+  // Linha da rota
+  L.polyline(rota, {
+    color: 'green',
+    weight: 5
+  }).addTo(mapaRotaDetalhada);
 }
