@@ -1,0 +1,251 @@
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #fefaf1;
+  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 30px 10px;
+}
+
+
+.container {
+  max-width: 600px;
+  margin: 30px auto;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #2c3e50;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+#mapRastreio {
+  height: 300px;
+  border-radius: 10px;
+  background: #e6e6e6;
+  margin: 10px 0 15px;
+  transition: opacity 0.3s ease;
+  border: 2px dashed red; /* remover depois */
+}
+
+#painelInfo {
+  background: #f0f8ff;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+
+    .input-icon {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon i {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.input-icon input {
+  padding-left: 40px !important; /* espaço pro ícone */
+}
+
+    /* Estilo novo do mapa com ônibus numerados */
+.mapa-complexa {
+  height: 250px;
+  background-image: url("mapa.jpg");
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  position: relative;
+  margin: 20px 0;
+  overflow: hidden;
+  border: 2px solid #3498db;
+}
+
+.onibus-num {
+  width: 36px;
+  height: 36px;
+  font-size: 15px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+
+.onibus01 {
+  top: 30px;
+  left: 10px;
+  animation: moverOnibus1 6s infinite alternate;
+}
+
+.onibus02 {
+  top: 100px;
+  left: 20px;
+  animation: moverOnibus2 8s infinite alternate;
+}
+
+.onibus03 {
+  top: 170px;
+  left: 5px;
+  animation: moverOnibus3 5s infinite alternate;
+}
+
+@keyframes moverOnibus1 {
+  from { left: 10px; }
+  to { left: 80%; }
+}
+
+@keyframes moverOnibus2 {
+  from { left: 20px; }
+  to { left: 60%; }
+}
+
+@keyframes moverOnibus3 {
+  from { left: 5px; }
+  to { left: 70%; }
+}
+
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .tela {
+      display: none;
+      background: #fff;
+      padding: 30px 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(67, 65, 65, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .ativa {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2c3e50;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+      background: #f9f9f9;
+      transition: border 0.3s;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #3498db;
+      outline: none;
+    }
+
+    .btn {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+    .btn:hover {
+      background: #2980b9;
+    }
+
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: #fdfdfd;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+      margin-top: 15px;
+    }
+
+    .mapa {
+      height: 200px;
+      background: #e0e0e0;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+
+    .onibus {
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 90px;
+      left: 10px;
+      animation: mover 3s infinite alternate ease-in-out;
+    }
+
+    @keyframes mover {
+      from { left: 10px; }
+      to { left: 85%; }
+    }
+
+    ul {
+      padding-left: 18px;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 150px;
+    }
+
+#seletorOnibus {
+  margin: 10px 0 20px;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+#legendaRastreio p {
+  margin-bottom: 6px;
+}

@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rastreamento do Ônibus</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Rastreamento do Ônibus</h1>
+    <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
+    <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
+      <option value="01">Ônibus 01</option>
+      <option value="02">Ônibus 02</option>
+      <option value="03">Ônibus 03</option>
+    </select>
+    <div id="mapRastreio"></div>
+    <div id="painelInfo"></div>
+  </div>
+</body>
+</html>
