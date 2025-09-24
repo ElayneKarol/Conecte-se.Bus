@@ -19,44 +19,60 @@
   </head>
 <body>
 
-  <!-- Tela de Login -->
-  <section class="tela ativa" id="telaLogin">
-    <img src="assets/img/conecte-se.png" alt="Logo Conecte-se" class="logo">
-    <h2>Login</h2>
-    <div class="input-icon">
-  <i class="fas fa-user"></i>
-  <input type="text" placeholder="Username" id="usuario">
-</div>
+<!-- Tela de Login -->
+<section class="tela ativa" id="telaLogin">
+  <img src="assets/img/conecte-se.png" alt="Logo Conecte-se" class="logo">
+  <h2>Login</h2>
+  
+  <div class="input-icon">
+    <i class="fas fa-user"></i>
+    <input type="text" placeholder="Username ou Matrícula" id="usuario">
+  </div>
 
-<div class="input-icon">
-  <i class="fas fa-lock"></i>
-  <input type="password" placeholder="Password" id="senha">
-</div>
+  <div class="input-icon">
+    <i class="fas fa-lock"></i>
+    <input type="password" placeholder="Password" id="senha">
+  </div>
 
-    <button class="btn" onclick="irParaCadastro()">Entrar</button>
-  </section>
+  <button class="btn" onclick="login()">Entrar</button>
+
+  <!-- Link para cadastro -->
+  <p style="margin-top:10px; font-size:14px;">
+    Ainda não tem conta? 
+    <a href="#" onclick="mostrarTela('telaCadastro')">Cadastre-se</a>
+  </p>
+</section>
+
 
   <!-- Tela de Cadastro -->
-  <section class="tela" id="telaCadastro">
-    <h2>Cadastro do Estudante</h2>
-    <input type="text" placeholder="Fazenda onde mora">
-    <select>
-      <option value="">Selecione a escola</option>
-      <option>Escola Estadual Pedro II</option>
-      <option>Escola Municipal Eloy</option>
-      <option>Escola Municipal Marta</option>
-    </select>
-    <input type="text" placeholder="Número da Matrícula">
-    <input type="text" placeholder="Nome completo do Estudante">
-    <select id="onibusSelecionado">
-  <option value="">Selecione o ônibus do aluno</option>
-  <option value="01">Ônibus 01</option>
-  <option value="02">Ônibus 02</option>
-  <option value="03">Ônibus 03</option>
-</select>
+<section class="tela" id="telaCadastro">
+  <h2>Cadastro do Estudante</h2>
+  <input type="text" id="nomeAluno" placeholder="Nome completo do Estudante">
+  <input type="text" id="matricula" placeholder="Número da Matrícula">
+  <input type="text" id="fazenda" placeholder="Fazenda onde mora">
+  
+  <select id="escola">
+    <option value="">Selecione a escola</option>
+    <option>Escola Cai</option>
+    <option>Escola Cemei</option>
+    <option>Escola Municipal Monsenhor</option>
+    <option>Escola Municipal Marta</option>
+    <option>Escola Estadual Efoc</option>
+    <option>Escola Municipal Eloy</option>
+    <option>Escola Estadual Pedro II</option>
+    
+  </select>
+  
+  <select id="onibusSelecionado">
+    <option value="">Selecione o ônibus do aluno</option>
+    <option value="1">Ônibus Rota Boa Vista</option>
+    <option value="2">Ônibus Rota Caraúbas</option>
+    <option value="3">Ônibus Rota 3 de Agosto</option>
+  </select>
 
-    <button class="btn" onclick="irParaMenu()">Salvar e Continuar</button>
-  </section>
+  <button class="btn" onclick="cadastrarAluno()">Salvar e Continuar</button>
+</section>
+
 
   <!-- Tela Principal (Menu) -->
   <section class="tela" id="telaMenu">
@@ -77,9 +93,9 @@
 
   <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
   <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
-    <option value="01">Ônibus 01</option>
-    <option value="02">Ônibus 02</option>
-    <option value="03">Ônibus 03</option>
+    <option value="01">Ônibus Rota Boa Vista</option>
+    <option value="02">Ônibus Rota Caraúbas</option>
+    <option value="03">Ônibus Rota 3 de Agosto</option>
   </select>
 
 <div id="mapRastreio" style="height: 300px; background: #eee; border-radius: 10px; margin: 15px 0;"></div>
