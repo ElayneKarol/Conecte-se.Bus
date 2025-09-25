@@ -1,26 +1,30 @@
 {
   "name": "conecte-se.bus",
   "version": "1.0.0",
-  "description": "",
-  "main": "script.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "API do Conecte-se Transporte Escolar",
+  "main": "backend/index.js",
+"scripts": {
+  "start": "node backend/index.js",
+  "dev": "nodemon backend/index.js"
+},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ElayneKarol/https---github.com-ElayneKarol-Conecte-se.Bus.git"
+    "url": "git+https://github.com/ElayneKarol/Conecte-se.Bus.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ElayneKarol/https---github.com-ElayneKarol-Conecte-se.Bus/issues"
+    "url": "https://github.com/ElayneKarol/Conecte-se.Bus/issues"
   },
-  "homepage": "https://github.com/ElayneKarol/https---github.com-ElayneKarol-Conecte-se.Bus#readme",
+  "homepage": "https://github.com/ElayneKarol/Conecte-se.Bus#readme",
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }
