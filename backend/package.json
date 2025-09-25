@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "API do Conecte-se Transporte Escolar",
   "main": "backend/index.js",
-"scripts": {
-  "start": "node backend/index.js",
-  "dev": "nodemon backend/index.js"
-},
+  "scripts": {
+    "start": "node backend/index.js",
+    "dev": "nodemon backend/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ElayneKarol/Conecte-se.Bus.git"
@@ -28,3 +28,4 @@
     "nodemon": "^3.0.3"
   }
 }
+
