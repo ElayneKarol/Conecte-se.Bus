@@ -110,9 +110,10 @@ async function gerarNotificacoes() {
 // ============================
 // LOGIN E CADASTRO
 // ============================
+// Login usando matrícula
 async function login() {
-  const usuario = document.getElementById("usuario").value;
-  const senha = document.getElementById("senha").value;
+  const usuario = document.getElementById("usuario").value; // matrícula
+  const senha = document.getElementById("senha").value;     // opcional
 
   if (!usuario || !senha) {
     alert("Preencha todos os campos!");
@@ -120,19 +121,23 @@ async function login() {
   }
 
   try {
-    const res = await fetch(`${API_URL}/api/alunos?usuario=${usuario}&senha=${senha}`);
+    const res = await fetch(`${API_URL}/api/alunos?matricula=${usuario}`);
     const dados = await res.json();
 
     if (dados.length === 0) {
       alert("Usuário não encontrado. Faça o cadastro.");
       mostrarTela("telaCadastro");
     } else {
+      // já encontrou no banco
+      localStorage.setItem("onibusAluno", dados[0].onibus_id);
       mostrarTela("telaMenu");
     }
   } catch (err) {
     console.error(err);
     alert("Erro ao conectar com o servidor.");
   }
+}
+
 }
 
 async function cadastrarAluno() {

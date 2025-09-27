@@ -3,10 +3,19 @@ const router = express.Router();
 const pool = require("../db");
 
 // ===============================
-// LISTAR TODOS OS ALUNOS
+// LISTAR TODOS OS ALUNOS OU BUSCAR POR MATRÍCULA (LOGIN)
 // ===============================
 router.get("/", async (req, res) => {
   try {
+    const { matricula } = req.query;
+
+    if (matricula) {
+      // Se vier matrícula, busca só o aluno correspondente
+      const result = await pool.query("SELECT * FROM alunos WHERE matricula = $1", [matricula]);
+      return res.json(result.rows);
+    }
+
+    // Caso contrário, lista todos
     const result = await pool.query("SELECT * FROM alunos ORDER BY id ASC");
     res.json(result.rows);
   } catch (err) {
@@ -60,19 +69,3 @@ router.get("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
-// Buscar aluno por matrícula (login)
-router.get("/", async (req, res) => {
-  try {
-    const { matricula } = req.query;
-    if (matricula) {
-      const result = await pool.query("SELECT * FROM alunos WHERE matricula = $1", [matricula]);
-      return res.json(result.rows);
-    }
-    const result = await pool.query("SELECT * FROM alunos");
-    res.json(result.rows);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Erro ao buscar alunos" });
-  }
-});
