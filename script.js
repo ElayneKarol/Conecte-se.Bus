@@ -1,8 +1,7 @@
 // ============================
 // CONFIGURAÇÃO BACKEND
 // ============================
-const API_URL = "https://conectese-backend.onrender.com"; // sua API no Render
-
+const API_URL = "https://conectese-backend.onrender.com/api/alunos";
 // ============================
 // INICIALIZAÇÃO DO RASTREIO
 // ============================

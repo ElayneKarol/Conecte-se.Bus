@@ -24,5 +24,7 @@ app.use("/api/notificacoes", notificacoesRoutes);
 app.use("/api/manutencoes", manutencoesRoutes);
 
 // Start servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+const PORT = process.env.PORT || 3000;  // NUNCA fixe 10000 ou 3000
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
