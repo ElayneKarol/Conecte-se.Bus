@@ -113,10 +113,9 @@ async function gerarNotificacoes() {
 // Login usando matrícula
 async function login() {
   const usuario = document.getElementById("usuario").value; // matrícula
-  const senha = document.getElementById("senha").value;     // opcional
 
-  if (!usuario || !senha) {
-    alert("Preencha todos os campos!");
+  if (!usuario) {
+    alert("Informe sua matrícula!");
     return;
   }
 
@@ -128,7 +127,7 @@ async function login() {
       alert("Usuário não encontrado. Faça o cadastro.");
       mostrarTela("telaCadastro");
     } else {
-      // já encontrou no banco
+      // aluno já cadastrado -> salva ônibus na sessão
       localStorage.setItem("onibusAluno", dados[0].onibus_id);
       mostrarTela("telaMenu");
     }
@@ -136,10 +135,9 @@ async function login() {
     console.error(err);
     alert("Erro ao conectar com o servidor.");
   }
+
 }
-
-
-
+//cadastro de novo aluno
 async function cadastrarAluno() {
   const nome = document.getElementById("nomeAluno").value;
   const matricula = document.getElementById("matricula").value;
