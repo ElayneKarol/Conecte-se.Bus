@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 // Importa as rotas
-const alunosRoutes = require("./routes/alunos");
-const onibusRoutes = require("./routes/onibus");
-const notificacoesRoutes = require("./routes/notificacoes");
-const manutencoesRoutes = require("./routes/manutencoes");
+const alunosRoutes = require("./backend/routes/alunos");
+const onibusRoutes = require("./backend/routes/onibus");
+const notificacoesRoutes = require("./backend/routes/notificacoes");
+const manutencoesRoutes = require("./backend/routes/manutencoes");
 
 // Rota inicial
 app.get("/", (req, res) => {
