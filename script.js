@@ -138,7 +138,6 @@ async function login() {
   }
 }
 
-}
 
 async function cadastrarAluno() {
   const nome = document.getElementById("nomeAluno").value;
