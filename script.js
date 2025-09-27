@@ -139,6 +139,7 @@ async function login() {
 }
 
 
+
 async function cadastrarAluno() {
   const nome = document.getElementById("nomeAluno").value;
   const matricula = document.getElementById("matricula").value;
