@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-app.use(cors());
 
-const app = express();
+const app = express(); // cria a instância primeiro
+
 app.use(cors());
 app.use(express.json());
 
@@ -24,7 +24,7 @@ app.use("/api/notificacoes", notificacoesRoutes);
 app.use("/api/manutencoes", manutencoesRoutes);
 
 // Start servidor
-const PORT = process.env.PORT || 3000;  // NUNCA fixe 10000 ou 3000
+const PORT = process.env.PORT || 3000; // Render substitui isso automaticamente
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
