@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const app = express();
 
-const app = express(); // cria a instância primeiro
+app.use(cors({
+  origin: ["https://elaynekarol.github.io"], // libera o seu GitHub Pages
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 
-app.use(cors());
 app.use(express.json());
+
 
 // Importa as rotas
 const alunosRoutes = require("./backend/routes/alunos");
