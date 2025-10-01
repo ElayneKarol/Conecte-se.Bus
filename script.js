@@ -3,6 +3,7 @@ const API_URL = "https://conectese-backend.onrender.com"; // sua API no Render
 // ============================
 // LOGIN E CADASTRO
 // ============================
+
 // Login usando matrícula
 async function login() {
   const usuario = document.getElementById("usuario").value; // matrícula
@@ -27,7 +28,6 @@ async function login() {
       alert("Usuário não encontrado. Faça o cadastro.");
       mostrarTela("telaCadastro");
     } else {
-      // já encontrou no banco
       localStorage.setItem("onibusAluno", dados[0].onibus_id);
       alert("✅ Login realizado com sucesso!");
       mostrarTela("telaMenu");

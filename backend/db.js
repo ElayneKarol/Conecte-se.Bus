@@ -14,7 +14,7 @@ const pool = new Pool({
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  ssl: { rejectUnauthorized: false } // Render precisa de SSL
+  ssl: { rejectUnauthorized: false }
 });
 
 pool.connect()
