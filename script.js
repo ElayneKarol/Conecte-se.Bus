@@ -1,8 +1,5 @@
-// =======================================================
-// CONFIGURAÇÃO INICIAL - COLOQUE SUA URL DO MOCKAPI AQUI!
-// =======================================================
-const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api/v1";
-
+// A VERSÃO 100% CORRETA DA PRIMEIRA LINHA DO SEU script.js
+const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";
 // =======================================================
 // FUNÇÕES DE LOGIN E CADASTRO
 // =======================================================
