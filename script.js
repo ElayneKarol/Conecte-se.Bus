@@ -1,13 +1,13 @@
-const API_URL = "https://conectese-backend.onrender.com"; // sua API no Render
+const API_URL = "https://68de7c35d7b591b4b78fb2cf.mockapi.io/api";
 
 // ============================
 // LOGIN E CADASTRO
 // ============================
 
-// Login usando matrícula
+// Login usando matrícula e senha
 async function login() {
   const usuario = document.getElementById("usuario").value; // matrícula
-  const senha = document.getElementById("senha").value;     // opcional
+  const senha = document.getElementById("senha").value;     // senha
 
   if (!usuario || !senha) {
     alert("Preencha todos os campos!");
@@ -15,7 +15,7 @@ async function login() {
   }
 
   try {
-    const url = `${API_URL}/api/alunos?matricula=${usuario}`;
+    const url = `${API_URL}/alunos?matricula=${usuario}&senha=${senha}`;
     console.log("🔍 Fazendo requisição para:", url);
 
     const res = await fetch(url);
@@ -47,20 +47,21 @@ async function cadastrarAluno() {
   const fazenda = document.getElementById("fazenda").value;
   const escola = document.getElementById("escola").value;
   const onibus = document.getElementById("onibusSelecionado").value;
+  const senha = document.getElementById("senha").value; // pega senha também
 
-  if (!nome || !matricula || !escola || !onibus) {
+  if (!nome || !matricula || !escola || !onibus || !senha) {
     alert("Preencha todos os campos obrigatórios.");
     return;
   }
 
   try {
-    const url = `${API_URL}/api/alunos`;
+    const url = `${API_URL}/alunos`;
     console.log("📝 Enviando cadastro para:", url);
 
     const res = await fetch(url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, matricula, fazenda, escola, onibus_id: onibus })
+      body: JSON.stringify({ nome, matricula, fazenda, escola, onibus_id: onibus, senha })
     });
 
     console.log("📩 Status da resposta cadastro:", res.status);

@@ -1,24 +1,15 @@
 require("dotenv").config();
 const { Pool } = require("pg");
 
-console.log("Tentando conectar ao banco com config:", {
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  database: process.env.DB_DATABASE
-});
+const { Pool } = require("pg");
+require("dotenv").config();
 
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
   database: process.env.DB_DATABASE,
-  ssl: { rejectUnauthorized: false }
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
 });
-
-pool.connect()
-  .then(() => console.log("✅ Conexão com banco bem-sucedida!"))
-  .catch(err => console.error("❌ Erro ao conectar no banco:", err));
 
 module.exports = pool;
