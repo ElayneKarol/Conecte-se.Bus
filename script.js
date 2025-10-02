@@ -1,10 +1,13 @@
-const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";// =======================================================
+// =======================================================
+// CONFIGURAÇÃO INICIAL - URL CORRETA DO MOCKAPI
+// =======================================================
+const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";
+
+
+// =======================================================
 // FUNÇÕES DE LOGIN E CADASTRO
 // =======================================================
 
-/**
- * Realiza o login do aluno usando a matrícula.
- */
 async function login() {
   const usuario = document.getElementById("usuario").value;
   const senha = document.getElementById("senha").value;
@@ -35,9 +38,6 @@ async function login() {
   }
 }
 
-/**
- * Cadastra um novo aluno.
- */
 async function cadastrarAluno() {
   const nome = document.getElementById("nomeAluno").value;
   const matricula = document.getElementById("matricula").value;
@@ -77,9 +77,6 @@ async function cadastrarAluno() {
 // FUNÇÕES PARA CARREGAR DADOS NAS TELAS
 // =======================================================
 
-/**
- * Busca e exibe os dados do ônibus na tela de Rastreio.
- */
 async function carregarDadosRastreio() {
     const onibusId = localStorage.getItem("onibusAluno");
     if (!onibusId) return;
@@ -103,9 +100,6 @@ async function carregarDadosRastreio() {
     }
 }
 
-/**
- * Busca e exibe as notificações na tela de Notificações.
- */
 async function carregarNotificacoesDoAluno() {
     const onibusId = localStorage.getItem("onibusAluno");
     if (!onibusId) return;
@@ -141,7 +135,7 @@ async function carregarNotificacoesDoAluno() {
 
 
 // =======================================================
-// FUNÇÃO PRINCIPAL DE NAVEGAÇÃO - A CHAVE DO PROBLEMA
+// FUNÇÃO PRINCIPAL DE NAVEGAÇÃO
 // =======================================================
 
 function mostrarTela(idTela) {
@@ -158,8 +152,9 @@ function mostrarTela(idTela) {
         }
     }
 }
+
 // =======================================================
-// FUNÇÕES AUXILIARES (ainda não implementadas, mas evitam erros)
+// FUNÇÕES AUXILIARES
 // =======================================================
 function enviarFeedback() {
     alert("Feedback enviado com sucesso! (Funcionalidade em desenvolvimento)");
