@@ -1,5 +1,4 @@
-const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";
-// =======================================================
+const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";// =======================================================
 // FUNÇÕES DE LOGIN E CADASTRO
 // =======================================================
 
@@ -145,30 +144,20 @@ async function carregarNotificacoesDoAluno() {
 // FUNÇÃO PRINCIPAL DE NAVEGAÇÃO - A CHAVE DO PROBLEMA
 // =======================================================
 
-/**
- * Gerencia a visibilidade das telas, combinando com o CSS.
- */
 function mostrarTela(idTela) {
-    // Esconde todas as seções que têm a classe ".tela"
     document.querySelectorAll('.tela').forEach(tela => {
         tela.classList.remove('ativa');
     });
-
-    // Mostra apenas a seção com o ID correto, adicionando a classe "ativa"
     const telaAtiva = document.getElementById(idTela);
     if (telaAtiva) {
         telaAtiva.classList.add('ativa');
-
-        // Carrega os dados APENAS se a tela que abrimos precisar deles
         if (idTela === 'telaRastreio') {
             carregarDadosRastreio();
-        } 
-        else if (idTela === 'telaNotificacoes') {
+        } else if (idTela === 'telaNotificacoes') {
             carregarNotificacoesDoAluno();
         }
     }
 }
-
 // =======================================================
 // FUNÇÕES AUXILIARES (ainda não implementadas, mas evitam erros)
 // =======================================================
