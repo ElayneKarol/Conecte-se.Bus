@@ -74,37 +74,33 @@ async function carregarNotificacoesDoAluno() {
     }
 }
 
-
 // ===============================================
-// VERSÃO CORRIGIDA DA FUNÇÃO mostrarTela
+// VERSÃO CORRIGIDA E MAIS ROBUSTA DA FUNÇÃO mostrarTela
 // ===============================================
 
-/**
- * Alterna a visibilidade das telas e chama as funções de carregamento
- * de dados para as telas específicas.
- */
 function mostrarTela(idTela) {
-  // Esconde todas as telas
-  const telas = document.querySelectorAll(".tela");
-  telas.forEach((tela) => {
-    // Usamos 'display: none' para garantir que a classe 'ativa' funcione bem
-    if (!tela.classList.contains(idTela)) {
+    // 1. Primeiro, esconde TODAS as telas que têm a classe ".tela"
+    const todasAsTelas = document.querySelectorAll('.tela');
+    todasAsTelas.forEach(tela => {
         tela.classList.remove('ativa');
-        tela.style.display = 'none';
+        tela.style.display = 'none'; // Garante que a tela seja escondida
+    });
+
+    // 2. Depois, mostra APENAS a tela com o ID que queremos
+    const telaParaMostrar = document.getElementById(idTela);
+    if (telaParaMostrar) {
+        telaParaMostrar.classList.add('ativa');
+        telaParaMostrar.style.display = 'block'; // Garante que a tela seja exibida
+
+        // 3. Carrega os dados APENAS se for uma tela que precisa deles
+        if (idTela === 'telaRastreio') {
+            carregarDadosRastreio();
+        } 
+        else if (idTela === 'telaNotificacoes') {
+            carregarNotificacoesDoAluno();
+        }
+    } else {
+        // Um aviso caso a gente tente chamar uma tela que não existe
+        console.error(`Erro: A tela com o ID "${idTela}" não foi encontrada no HTML!`);
     }
-  });
-
-  // Mostra a tela desejada
-  const telaAtiva = document.getElementById(idTela);
-  telaAtiva.classList.add('ativa');
-  telaAtiva.style.display = 'block';
-
-
-  // VERIFICA QUAL TELA ESTÁ SENDO ABERTA E CARREGA OS DADOS NECESSÁRIOS
-  if (idTela === 'telaRastreio') {
-    carregarDadosRastreio();
-  } 
-  else if (idTela === 'telaNotificacoes') {
-    carregarNotificacoesDoAluno();
-  }
 }
