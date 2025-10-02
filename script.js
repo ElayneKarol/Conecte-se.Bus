@@ -1,11 +1,90 @@
-const API_URL = "https://SEU_ID_AQUI.mockapi.io/api/v1";
 // =======================================================
-// NOVAS FUNÇÕES PARA CARREGAR DADOS NAS TELAS CORRETAS
+// CONFIGURAÇÃO INICIAL - COLOQUE SUA URL DO MOCKAPI AQUI!
+// =======================================================
+const API_URL = "https://SEU_ID_AQUI.mockapi.io/api/v1";
+
+
+// =======================================================
+// FUNÇÕES DE LOGIN E CADASTRO
 // =======================================================
 
 /**
- * Busca os dados do ônibus do aluno (status, motorista, etc.)
- * e os exibe na tela de Rastreio.
+ * Realiza o login do aluno usando a matrícula.
+ */
+async function login() {
+  const usuario = document.getElementById("usuario").value;
+  const senha = document.getElementById("senha").value;
+
+  if (!usuario || !senha) {
+    alert("Preencha todos os campos!");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/alunos?matricula=${usuario}`);
+    if (!res.ok) {
+        throw new Error(`Erro na rede: Status ${res.status}`);
+    }
+    const dados = await res.json();
+
+    if (dados.length === 0) {
+      alert("Usuário não encontrado. Faça o cadastro.");
+      mostrarTela("telaCadastro");
+    } else {
+      localStorage.setItem("onibusAluno", dados[0].onibus_id);
+      alert("✅ Login realizado com sucesso!");
+      mostrarTela("telaMenu");
+    }
+  } catch (err) {
+    console.error("❌ Erro ao conectar com o servidor (login):", err);
+    alert("Erro ao conectar com o servidor. Verifique a URL da API e os dados no MockAPI.");
+  }
+}
+
+/**
+ * Cadastra um novo aluno.
+ */
+async function cadastrarAluno() {
+  const nome = document.getElementById("nomeAluno").value;
+  const matricula = document.getElementById("matricula").value;
+  const fazenda = document.getElementById("fazenda").value;
+  const escola = document.getElementById("escola").value;
+  const onibus = document.getElementById("onibusSelecionado").value;
+
+  if (!nome || !matricula || !escola || !onibus) {
+    alert("Preencha todos os campos obrigatórios.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API_URL}/alunos`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ nome, matricula, fazenda, escola, onibus_id: onibus })
+    });
+
+    if (res.ok) {
+      const aluno = await res.json();
+      alert("Cadastro realizado com sucesso!");
+      localStorage.setItem("onibusAluno", aluno.onibus_id);
+      mostrarTela("telaMenu");
+    } else {
+      const erro = await res.json();
+      alert("Erro no cadastro: " + (erro.error || 'Tente novamente.'));
+    }
+  } catch (err) {
+    console.error("❌ Erro ao conectar com o servidor (cadastro):", err);
+    alert("Erro ao conectar com o servidor.");
+  }
+}
+
+
+// =======================================================
+// FUNÇÕES PARA CARREGAR DADOS NAS TELAS
+// =======================================================
+
+/**
+ * Busca e exibe os dados do ônibus na tela de Rastreio.
  */
 async function carregarDadosRastreio() {
     const onibusId = localStorage.getItem("onibusAluno");
@@ -18,7 +97,6 @@ async function carregarDadosRastreio() {
         const res = await fetch(`${API_URL}/onibus/${onibusId}`);
         const onibus = await res.json();
 
-        // Cria o HTML com os dados do ônibus e insere no container
         containerLegenda.innerHTML = `
             <p><strong>Rota:</strong> ${onibus.nome}</p>
             <p><strong>Motorista:</strong> ${onibus.motorista}</p>
@@ -26,16 +104,13 @@ async function carregarDadosRastreio() {
             <p><strong>Localização:</strong> ${onibus.ultima_localizacao}</p>
             <p><small>Última atualização: ${onibus.ultimo_update}</small></p>
         `;
-
     } catch (err) {
-        console.error("Erro ao carregar dados de rastreio:", err);
         containerLegenda.innerHTML = "<p>Não foi possível carregar os dados do ônibus.</p>";
     }
 }
 
 /**
- * Busca as notificações do ônibus do aluno
- * e as exibe na tela de Notificações.
+ * Busca e exibe as notificações na tela de Notificações.
  */
 async function carregarNotificacoesDoAluno() {
     const onibusId = localStorage.getItem("onibusAluno");
@@ -45,7 +120,6 @@ async function carregarNotificacoesDoAluno() {
     container.innerHTML = "<p>Carregando notificações...</p>";
 
     try {
-        // Busca o ônibus para pegar as notificações aninhadas
         const res = await fetch(`${API_URL}/onibus/${onibusId}`);
         const onibus = await res.json();
         const notificacoes = onibus.notificacoes;
@@ -55,53 +129,59 @@ async function carregarNotificacoesDoAluno() {
             return;
         }
         
-        // Limpa o container antes de adicionar as novas notificações
-        container.innerHTML = "";
+        container.innerHTML = ""; // Limpa antes de adicionar
 
-        // Cria e adiciona um elemento HTML para cada notificação
         for (const notificacao of notificacoes) {
             const divNotificacao = document.createElement("div");
-            divNotificacao.className = "card"; // Reutilizando sua classe .card para estilizar
+            divNotificacao.className = "card";
             divNotificacao.innerHTML = `
                 <h4>${notificacao.titulo}</h4>
                 <p>${notificacao.mensagem}</p>
             `;
             container.appendChild(divNotificacao);
         }
-
     } catch (err) {
-        console.error("Erro ao carregar notificações:", err);
         container.innerHTML = "<p>Não foi possível carregar as notificações.</p>";
     }
 }
 
-// ===============================================
-// VERSÃO CORRIGIDA E MAIS ROBUSTA DA FUNÇÃO mostrarTela
-// ===============================================
 
+// =======================================================
+// FUNÇÃO PRINCIPAL DE NAVEGAÇÃO - A CHAVE DO PROBLEMA
+// =======================================================
+
+/**
+ * Gerencia a visibilidade das telas, combinando com o CSS.
+ */
 function mostrarTela(idTela) {
-    // 1. Primeiro, esconde TODAS as telas que têm a classe ".tela"
-    const todasAsTelas = document.querySelectorAll('.tela');
-    todasAsTelas.forEach(tela => {
+    // Esconde todas as seções que têm a classe ".tela"
+    document.querySelectorAll('.tela').forEach(tela => {
         tela.classList.remove('ativa');
-        tela.style.display = 'none'; // Garante que a tela seja escondida
     });
 
-    // 2. Depois, mostra APENAS a tela com o ID que queremos
-    const telaParaMostrar = document.getElementById(idTela);
-    if (telaParaMostrar) {
-        telaParaMostrar.classList.add('ativa');
-        telaParaMostrar.style.display = 'block'; // Garante que a tela seja exibida
+    // Mostra apenas a seção com o ID correto, adicionando a classe "ativa"
+    const telaAtiva = document.getElementById(idTela);
+    if (telaAtiva) {
+        telaAtiva.classList.add('ativa');
 
-        // 3. Carrega os dados APENAS se for uma tela que precisa deles
+        // Carrega os dados APENAS se a tela que abrimos precisar deles
         if (idTela === 'telaRastreio') {
             carregarDadosRastreio();
         } 
         else if (idTela === 'telaNotificacoes') {
             carregarNotificacoesDoAluno();
         }
-    } else {
-        // Um aviso caso a gente tente chamar uma tela que não existe
-        console.error(`Erro: A tela com o ID "${idTela}" não foi encontrada no HTML!`);
     }
+}
+
+// =======================================================
+// FUNÇÕES AUXILIARES (ainda não implementadas, mas evitam erros)
+// =======================================================
+function enviarFeedback() {
+    alert("Feedback enviado com sucesso! (Funcionalidade em desenvolvimento)");
+    mostrarTela('telaMenu');
+}
+
+function atualizarRotaSelecionada() {
+    console.log("Função 'atualizarRotaSelecionada' chamada. (Funcionalidade em desenvolvimento)");
 }
