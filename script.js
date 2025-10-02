@@ -1,3 +1,4 @@
+const API_URL = "https://SEU_ID_AQUI.mockapi.io/api/v1";
 // =======================================================
 // NOVAS FUNÇÕES PARA CARREGAR DADOS NAS TELAS CORRETAS
 // =======================================================
