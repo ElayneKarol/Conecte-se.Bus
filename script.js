@@ -1,14 +1,25 @@
 // =======================================================
-// CONFIGURAÇÃO INICIAL - URL CORRETA DO MOCKAPI
-// =======================================================
-const API_URL = "https://68de7c35d7b591b4b78f82cf.mockapi.io/api";
-
-
-// =======================================================
-// FUNÇÕES DE LOGIN E CADASTRO
+// VERSÃO OFFLINE - SEM API, USANDO LOCALSTORAGE
 // =======================================================
 
-async function login() {
+// Dados simulados de ônibus (para o rastreio)
+const onibusExemplo = {
+  id: 1,
+  nome: "Rota A - Zona Rural",
+  motorista: "José da Silva",
+  status: "Em trânsito",
+  ultima_localizacao: "Fazenda Boa Esperança",
+  ultimo_update: "05/10/2025 14:32",
+  notificacoes: [
+    { titulo: "Atraso na rota", mensagem: "O ônibus sofreu um pequeno atraso devido à chuva." },
+    { titulo: "Rota normalizada", mensagem: "O trajeto voltou ao horário habitual." }
+  ]
+};
+
+// =======================================================
+// LOGIN E CADASTRO (LOCALSTORAGE)
+// =======================================================
+function login() {
   const usuario = document.getElementById("usuario").value;
   const senha = document.getElementById("senha").value;
 
@@ -17,150 +28,117 @@ async function login() {
     return;
   }
 
-  try {
-    const res = await fetch(`${API_URL}/alunos?matricula=${usuario}`);
-    if (!res.ok) {
-        throw new Error(`Erro na rede: Status ${res.status}`);
-    }
-    const dados = await res.json();
+  // Carrega alunos salvos localmente
+  const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
 
-    if (dados.length === 0) {
-      alert("Usuário não encontrado. Faça o cadastro.");
-      mostrarTela("telaCadastro");
-    } else {
-      localStorage.setItem("onibusAluno", dados[0].onibus_id);
-      alert("✅ Login realizado com sucesso!");
-      mostrarTela("telaMenu");
-    }
-  } catch (err) {
-    console.error("❌ Erro ao conectar com o servidor (login):", err);
-    alert("Erro ao conectar com o servidor. Verifique a URL da API e os dados no MockAPI.");
+  // Verifica se o aluno existe
+  const aluno = alunos.find(a => a.matricula === usuario && a.senha === senha);
+
+  if (!aluno) {
+    alert("Usuário não encontrado. Faça o cadastro.");
+    mostrarTela("telaCadastro");
+  } else {
+    localStorage.setItem("onibusAluno", aluno.onibus_id);
+    alert("✅ Login realizado com sucesso!");
+    mostrarTela("telaMenu");
   }
 }
 
-async function cadastrarAluno() {
+function cadastrarAluno() {
   const nome = document.getElementById("nomeAluno").value;
   const matricula = document.getElementById("matricula").value;
   const fazenda = document.getElementById("fazenda").value;
   const escola = document.getElementById("escola").value;
   const onibus = document.getElementById("onibusSelecionado").value;
+  const senha = prompt("Defina uma senha para este aluno:");
 
-  if (!nome || !matricula || !escola || !onibus) {
+  if (!nome || !matricula || !escola || !onibus || !senha) {
     alert("Preencha todos os campos obrigatórios.");
     return;
   }
 
-  try {
-    const res = await fetch(`${API_URL}/alunos`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ nome, matricula, fazenda, escola, onibus_id: onibus })
-    });
+  // Carrega alunos existentes
+  const alunos = JSON.parse(localStorage.getItem("alunos")) || [];
 
-    if (res.ok) {
-      const aluno = await res.json();
-      alert("Cadastro realizado com sucesso!");
-      localStorage.setItem("onibusAluno", aluno.onibus_id);
-      mostrarTela("telaMenu");
-    } else {
-      const erro = await res.json();
-      alert("Erro no cadastro: " + (erro.error || 'Tente novamente.'));
-    }
-  } catch (err) {
-    console.error("❌ Erro ao conectar com o servidor (cadastro):", err);
-    alert("Erro ao conectar com o servidor.");
+  // Verifica duplicidade
+  if (alunos.some(a => a.matricula === matricula)) {
+    alert("Matrícula já cadastrada!");
+    return;
+  }
+
+  // Cria novo aluno
+  const novoAluno = { nome, matricula, fazenda, escola, onibus_id: onibus, senha };
+  alunos.push(novoAluno);
+  localStorage.setItem("alunos", JSON.stringify(alunos));
+
+  alert("Cadastro realizado com sucesso!");
+  localStorage.setItem("onibusAluno", onibus);
+  mostrarTela("telaMenu");
+}
+
+// =======================================================
+// RASTREIO E NOTIFICAÇÕES (SIMULAÇÃO)
+// =======================================================
+function carregarDadosRastreio() {
+  const containerLegenda = document.getElementById("legendaRastreio");
+  const onibusId = localStorage.getItem("onibusAluno");
+
+  if (!onibusId) {
+    containerLegenda.innerHTML = "<p>Nenhum ônibus associado a este aluno.</p>";
+    return;
+  }
+
+  containerLegenda.innerHTML = `
+    <p><strong>Rota:</strong> ${onibusExemplo.nome}</p>
+    <p><strong>Motorista:</strong> ${onibusExemplo.motorista}</p>
+    <p><strong>Status:</strong> ${onibusExemplo.status}</p>
+    <p><strong>Localização:</strong> ${onibusExemplo.ultima_localizacao}</p>
+    <p><small>Última atualização: ${onibusExemplo.ultimo_update}</small></p>
+  `;
+}
+
+function carregarNotificacoesDoAluno() {
+  const container = document.getElementById("notificacoesContainer");
+  container.innerHTML = "";
+
+  for (const notificacao of onibusExemplo.notificacoes) {
+    const divNotificacao = document.createElement("div");
+    divNotificacao.className = "card";
+    divNotificacao.innerHTML = `
+      <h4>${notificacao.titulo}</h4>
+      <p>${notificacao.mensagem}</p>
+    `;
+    container.appendChild(divNotificacao);
   }
 }
 
-
 // =======================================================
-// FUNÇÕES PARA CARREGAR DADOS NAS TELAS
+// NAVEGAÇÃO ENTRE TELAS
 // =======================================================
-
-async function carregarDadosRastreio() {
-    const onibusId = localStorage.getItem("onibusAluno");
-    if (!onibusId) return;
-
-    const containerLegenda = document.getElementById("legendaRastreio");
-    containerLegenda.innerHTML = "<p>Carregando informações...</p>";
-
-    try {
-        const res = await fetch(`${API_URL}/onibus/${onibusId}`);
-        const onibus = await res.json();
-
-        containerLegenda.innerHTML = `
-            <p><strong>Rota:</strong> ${onibus.nome}</p>
-            <p><strong>Motorista:</strong> ${onibus.motorista}</p>
-            <p><strong>Status:</strong> ${onibus.status}</p>
-            <p><strong>Localização:</strong> ${onibus.ultima_localizacao}</p>
-            <p><small>Última atualização: ${onibus.ultimo_update}</small></p>
-        `;
-    } catch (err) {
-        containerLegenda.innerHTML = "<p>Não foi possível carregar os dados do ônibus.</p>";
-    }
-}
-
-async function carregarNotificacoesDoAluno() {
-    const onibusId = localStorage.getItem("onibusAluno");
-    if (!onibusId) return;
-
-    const container = document.getElementById("notificacoesContainer");
-    container.innerHTML = "<p>Carregando notificações...</p>";
-
-    try {
-        const res = await fetch(`${API_URL}/onibus/${onibusId}`);
-        const onibus = await res.json();
-        const notificacoes = onibus.notificacoes;
-
-        if (!notificacoes || notificacoes.length === 0) {
-            container.innerHTML = "<p>Nenhuma notificação para sua rota.</p>";
-            return;
-        }
-        
-        container.innerHTML = ""; // Limpa antes de adicionar
-
-        for (const notificacao of notificacoes) {
-            const divNotificacao = document.createElement("div");
-            divNotificacao.className = "card";
-            divNotificacao.innerHTML = `
-                <h4>${notificacao.titulo}</h4>
-                <p>${notificacao.mensagem}</p>
-            `;
-            container.appendChild(divNotificacao);
-        }
-    } catch (err) {
-        container.innerHTML = "<p>Não foi possível carregar as notificações.</p>";
-    }
-}
-
-
-// =======================================================
-// FUNÇÃO PRINCIPAL DE NAVEGAÇÃO
-// =======================================================
-
 function mostrarTela(idTela) {
-    document.querySelectorAll('.tela').forEach(tela => {
-        tela.classList.remove('ativa');
-    });
-    const telaAtiva = document.getElementById(idTela);
-    if (telaAtiva) {
-        telaAtiva.classList.add('ativa');
-        if (idTela === 'telaRastreio') {
-            carregarDadosRastreio();
-        } else if (idTela === 'telaNotificacoes') {
-            carregarNotificacoesDoAluno();
-        }
+  document.querySelectorAll(".tela").forEach(tela => {
+    tela.classList.remove("ativa");
+  });
+  const telaAtiva = document.getElementById(idTela);
+  if (telaAtiva) {
+    telaAtiva.classList.add("ativa");
+
+    if (idTela === "telaRastreio") {
+      carregarDadosRastreio();
+    } else if (idTela === "telaNotificacoes") {
+      carregarNotificacoesDoAluno();
     }
+  }
 }
 
 // =======================================================
 // FUNÇÕES AUXILIARES
 // =======================================================
 function enviarFeedback() {
-    alert("Feedback enviado com sucesso! (Funcionalidade em desenvolvimento)");
-    mostrarTela('telaMenu');
+  alert("Feedback enviado com sucesso! (Simulação local)");
+  mostrarTela("telaMenu");
 }
 
 function atualizarRotaSelecionada() {
-    console.log("Função 'atualizarRotaSelecionada' chamada. (Funcionalidade em desenvolvimento)");
+  console.log("Função 'atualizarRotaSelecionada' chamada (offline).");
 }
