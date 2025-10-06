@@ -2,166 +2,129 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8">
-  <!-- Leaflet CSS -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-<!-- Leaflet JS -->
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <!-- Leaflet.js (biblioteca de mapa) -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <title>Conecte-se - Transporte Escolar</title>
-    <link rel="stylesheet" href="style.css"/>
-<link rel="icon" type="image/png" href="assets/img/onibus-icon.png">
 
-  </head>
+  <!-- Ícone e estilo -->
+  <link rel="icon" type="image/png" href="assets/img/onibus-icon.png">
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Font Awesome (ícones) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- Leaflet (mapa) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
 <body>
 
-<!-- Tela de Login -->
-<section class="tela ativa" id="telaLogin">
-  <img src="assets/img/conecte-se.png" alt="Logo Conecte-se" class="logo">
-  <h2>Login</h2>
-  
-  <div class="input-icon">
-  <i class="fas fa-id-card"></i>
-  <input type="text" placeholder="Matrícula" id="usuario">
-</div>
+  <!-- Tela de Login -->
+  <section class="tela ativa" id="telaLogin">
+    <img src="assets/img/conecte-se.png" alt="Logo Conecte-se" class="logo">
+    <h2>Login</h2>
+    
+    <div class="input-icon">
+      <i class="fas fa-id-card"></i>
+      <input type="text" placeholder="Usuário" id="usuario">
+    </div>
 
-  <div class="input-icon">
-    <i class="fas fa-lock"></i>
-    <input type="password" placeholder="Senha" id="senha">
-  </div>
+    <div class="input-icon">
+      <i class="fas fa-lock"></i>
+      <input type="password" placeholder="Senha" id="senha">
+    </div>
 
-  <button class="btn" onclick="login()">Entrar</button>
+    <button class="btn" onclick="login()">Entrar</button>
 
-  <!-- Link para cadastro -->
-  <p style="margin-top:10px; font-size:14px;">
-    Ainda não tem conta? 
-    <a href="#" onclick="mostrarTela('telaCadastro')">Cadastre-se</a>
-  </p>
-</section>
-
+    <p style="margin-top:10px; font-size:14px;">
+      Ainda não tem conta? 
+      <a href="#" onclick="mostrarTela('telaCadastro')">Cadastre-se</a>
+    </p>
+  </section>
 
   <!-- Tela de Cadastro -->
-<section class="tela" id="telaCadastro">
-  <h2>Cadastro do Estudante</h2>
-  <input type="text" id="nomeAluno" placeholder="Nome completo do Estudante">
-  <input type="text" id="matricula" placeholder="Número da Matrícula">
-  <input type="text" id="fazenda" placeholder="Fazenda onde mora">
-  
-  <select id="escola">
-    <option value="">Selecione a escola</option>
-    <option>Escola Cai</option>
-    <option>Escola Cemei</option>
-    <option>Escola Municipal Monsenhor</option>
-    <option>Escola Municipal Marta</option>
-    <option>Escola Estadual Efoc</option>
-    <option>Escola Municipal Eloy</option>
-    <option>Escola Estadual Pedro II</option>
+  <section class="tela" id="telaCadastro">
+    <h2>Cadastro do Estudante</h2>
+    <input type="text" id="nomeAluno" placeholder="Nome completo do Estudante">
+    <input type="text" id="matricula" placeholder="Número da Matrícula">
+    <input type="text" id="fazenda" placeholder="Fazenda onde mora">
     
-  </select>
-  
-  
-  <select id="onibusSelecionado">
-    <option value="">Selecione o ônibus do aluno</option>
-    <option value="1">Ônibus Rota Boa Vista</option>
-    <option value="2">Ônibus Rota Caraúbas</option>
-    <option value="3">Ônibus Rota 3 de Agosto</option>
-  </select>
+    <select id="escola">
+      <option value="">Selecione a escola</option>
+      <option>Escola Cai</option>
+      <option>Escola Cemei</option>
+      <option>Escola Municipal Monsenhor</option>
+      <option>Escola Municipal Marta</option>
+      <option>Escola Estadual Efoc</option>
+      <option>Escola Municipal Eloy</option>
+      <option>Escola Estadual Pedro II</option>
+    </select>
+    
+    <select id="onibusSelecionado">
+      <option value="">Selecione o ônibus do aluno</option>
+      <option value="1">Ônibus Rota Boa Vista</option>
+      <option value="2">Ônibus Rota Caraúbas</option>
+      <option value="3">Ônibus Rota 3 de Agosto</option>
+    </select>
 
-  <button class="btn" onclick="cadastrarAluno()">Salvar e Continuar</button>
-</section>
+    <button class="btn" onclick="cadastrarAluno()">Salvar e Continuar</button>
+  </section>
 
-
-  <!-- Tela Principal (Menu) -->
+  <!-- Tela Principal -->
   <section class="tela" id="telaMenu">
     <h2>Menu Principal</h2>
     <div class="menu">
       <button class="btn" onclick="mostrarTela('telaRastreio')">📍 Rastreio</button>
-<button class="btn" onclick="mostrarTela('telaRotaDetalhada')">🛣️ Mapeamento de Rota</button>
+      <button class="btn" onclick="mostrarTela('telaRotaDetalhada')">🛣️ Mapeamento de Rota</button>
       <button class="btn" onclick="mostrarTela('telaChecklist')">🛠️ Checklist</button>
       <button class="btn" onclick="mostrarTela('telaFeedback')">💬 Feedback</button>
       <button class="btn" onclick="mostrarTela('telaNotificacoes')">🔔 Notificações</button>
-
     </div>
   </section>
 
-<!-- Tela Rastreio com seletor e mapa -->
-<section class="tela" id="telaRastreio">
-  <h2>Rastreamento do Ônibus</h2>
+  <!-- Tela Rastreio -->
+  <section class="tela" id="telaRastreio">
+    <h2>Rastreamento do Ônibus</h2>
 
-  <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
-  <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
-    <option value="01">Ônibus Rota Boa Vista</option>
-    <option value="02">Ônibus Rota Caraúbas</option>
-    <option value="03">Ônibus Rota 3 de Agosto</option>
-  </select>
+    <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
+    <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
+      <option value="1">Ônibus Rota Boa Vista</option>
+      <option value="2">Ônibus Rota Caraúbas</option>
+      <option value="3">Ônibus Rota 3 de Agosto</option>
+    </select>
 
-<div id="mapRastreio" style="height: 300px; background: #eee; border-radius: 10px; margin: 15px 0;"></div>
+    <div id="mapRastreio" style="height: 300px; border-radius: 10px; margin: 15px 0;"></div>
 
-  <div class="card" id="legendaRastreio">
-    <!-- Será preenchido dinamicamente -->
-  </div>
+    <div class="card" id="legendaRastreio"></div>
 
-  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-</section>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
 
+  <!-- Tela de Rotas -->
+  <section class="tela" id="telaRotaDetalhada">
+    <h2>Mapeamento de Rotas</h2>
+    <div id="mapRotaDetalhada"></div>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
+  
+  <!-- Tela Rota Detalhada -->
+  <!--<section class="tela" id="telaRotaDetalhada">-->
+    <!--<h2>Rota: Boa Vista → Escola Pedro II</h2>-->
 
+    <!--<div id="mapRotaDetalhada" style="height: 280px; border-radius: 10px; margin-bottom: 20px;"></div>-->
 
-  <!-- Tela Mapeamento de Rota -->
-<section class="tela" id="telaRota">
-  <h2>Mapeamento de Rotas</h2>
+    <!--<div class="card">-->
+      <!--<p><strong>Ponto atual:</strong> Fazenda Boa Vista</p>-->
+      <!--<p><strong>Horário agendado:</strong> 🕒 06:50</p>-->
+      <!--<p><strong>Previsão de chegada:</strong> 🕒 07:10</p>-->
 
-  <div class="card">
-    <p><strong>Ônibus 01 - Rota Boa Vista → Escola Pedro II</strong></p>
-    <ul>
-      <li>🕒 Sai da garagem: 06:30</li>
-      <li>🕒 Passa na Fazenda Boa Vista: 06:50</li>
-      <li>🕒 Chega na Escola Pedro II: 07:10</li>
-    </ul>
-  </div>
+      <!--<div style="margin-top: 10px;">-->
+        <!--<button class="btn" onclick="alert('A rota completa será exibida em breve.')">📍 Visualizar rota</button>-->
+        <!--<button class="btn" onclick="alert('Chegada prevista às 07:10. Nenhum atraso no momento.')">🔔 Atualizações de chegada</button>-->
+      <!--</div>-->
+  <!--  </div>-->
 
-  <div class="card">
-    <p><strong>Ônibus 02 - Rota Caraúbas → Escola Marta</strong></p>
-    <ul>
-      <li>🕒 Sai da garagem: 06:20</li>
-      <li>🕒 Passa na Fazenda Caraúbas: 06:40</li>
-      <li>🕒 Chega na Escola Marta: 07:00</li>
-    </ul>
-  </div>
-
-  <div class="card">
-    <p><strong>Ônibus 03 - Rota 3 de Agosto → Escola Eloy</strong></p>
-    <ul>
-      <li>🕒 Sai da garagem: 06:15</li>
-      <li>🕒 Passa na Fazenda 3 de Agosto: 06:35</li>
-      <li>🕒 Chega na Escola Eloy: 06:55</li>
-    </ul>
-  </div>
-
-  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-</section>
-<section class="tela" id="telaRotaDetalhada">
-  <h2>Rota: Boa Vista → Escola Pedro II</h2>
-
-  <div id="mapRotaDetalhada" style="height: 280px; border-radius: 10px; margin-bottom: 20px;"></div>
-
-  <div class="card">
-    <p><strong>Ponto atual:</strong> Fazenda Boa Vista</p>
-    <p><strong>Horário agendado:</strong> 🕒 06:50</p>
-    <p><strong>Previsão de chegada:</strong> 🕒 07:10</p>
-
-    <div style="margin-top: 10px;">
-      <button class="btn" onclick="alert('A rota completa será exibida em breve.')">📍 Visualizar rota</button>
-      <button class="btn" onclick="alert('Chegada prevista às 07:10. Nenhum atraso no momento.')">🔔 Atualizações de chegada</button>
-    </div>
-  </div>
-
-  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-</section>
-
+  <!--  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>-->
+  <!-- </section>-->
 
   <!-- Tela Checklist -->
   <section class="tela" id="telaChecklist">
@@ -183,12 +146,14 @@
   </section>
 
   <!-- Tela Notificações -->
-<section class="tela" id="telaNotificacoes">
-  <h2>Notificações do Ônibus do Aluno</h2>
-  <div id="notificacoesContainer"></div>
-  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-</section>  
+  <section class="tela" id="telaNotificacoes">
+    <h2>Notificações do Ônibus do Aluno</h2>
+    <div id="notificacoesContainer"></div>
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>  
+
+  <!-- Script principal -->
   <script src="script.js"></script>
 
-
+</body>
 </html>
