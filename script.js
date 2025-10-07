@@ -123,22 +123,32 @@ function iniciarMapaRastreio() {
   const idSelecionado = Number(seletor.value);
   const rota = onibusData.find(o => o.id === idSelecionado);
 
-  // Cria o mapa
+  // Remove o mapa anterior, se existir
   if (mapaRastreio) mapaRastreio.remove();
+
+  // Centraliza em Lajes/RN
   mapaRastreio = L.map("mapRastreio").setView([-5.6936, -36.2476], 13);
 
+  // Adiciona o mapa base
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(mapaRastreio);
 
-  // Desenha a rota
+  // Adiciona marcador principal de Lajes
+  const marker = L.marker([-5.6936, -36.2476]).addTo(mapaRastreio);
+  marker.bindPopup("📍 <b>Lajes - RN</b><br>Área de cobertura do transporte escolar.").openPopup();
+
+  // Desenha a rota selecionada
   const linha = L.polyline(rota.pontos, { color: "blue", weight: 4 }).addTo(mapaRastreio);
-  rota.pontos.forEach((p, i) => L.marker(p).addTo(mapaRastreio).bindPopup(`Ponto ${i + 1}`));
+  rota.pontos.forEach((p, i) => L.circleMarker(p, { color: "red" })
+    .addTo(mapaRastreio)
+    .bindPopup(`📍 Ponto ${i + 1}`));
   mapaRastreio.fitBounds(linha.getBounds());
 
-  // Atualiza a legenda abaixo do mapa
+  // Atualiza a legenda logo após montar o mapa
   atualizarLegendaRastreio(rota);
 }
+
 
 function atualizarLegendaRastreio(rota) {
   const legenda = document.getElementById("legendaRastreio");
