@@ -1,13 +1,50 @@
-// =======================================================
-// MODO OFFLINE - DADOS LOCAIS
-// =======================================================
-
+// =========================
+// DADOS LOCAIS
+// =========================
 let alunos = [
   { matricula: "admin", senha: "1234", nome: "Administrador", onibus_id: 1 }
 ];
 
-let onibus = [
-  { id: 1, nome: "Ônibus 01", motorista: "João", status: "No trajeto", ultima_localizacao: "Centro", ultimo_update: "Agora" }
+const onibusData = [
+  {
+    id: 1,
+    nome: "Ônibus 01 - Rota Boa Vista",
+    motorista: "João",
+    status: "No trajeto",
+    ultima_localizacao: "Fazenda Boa Vista",
+    ultimo_update: "Agora",
+    pontos: [
+      [-5.6895, -36.2650],
+      [-5.6905, -36.2550],
+      [-5.6936, -36.2476]
+    ]
+  },
+  {
+    id: 2,
+    nome: "Ônibus 02 - Rota Caraúbas",
+    motorista: "Maria Souza",
+    status: "Em trânsito",
+    ultima_localizacao: "Fazenda Caraúbas",
+    ultimo_update: "Há 5 minutos",
+    pontos: [
+      [-5.7080, -36.2600],
+      [-5.7000, -36.2500],
+      [-5.6936, -36.2476]
+    ]
+  },
+  {
+    id: 3,
+    nome: "Ônibus 03 - Rota 3 de Agosto",
+    motorista: "José Gomes",
+    status: "Saindo da garagem",
+    ultima_localizacao: "Fazenda 3 de Agosto",
+    ultimo_update: "Há 2 minutos",
+    pontos: [
+      [-5.7105, -36.2400],
+      [-5.7030, -36.2450],
+      [-5.6936, -36.2476]
+    ]
+  }
 ];
 
 // =========================
@@ -77,28 +114,40 @@ function mostrarTela(id) {
 }
 
 // =========================
-// MAPAS LEAFLET
+// MAPAS (LEAFLET)
 // =========================
-let mapaRastreio, mapaRota;
+let mapaRastreio, mapaRota, marcadorRastreio;
 
 function iniciarMapaRastreio() {
-  const idOnibus = Number(document.getElementById("seletorOnibus").value);
-  const rota = onibusData.find(o => o.id === idOnibus);
+  const seletor = document.getElementById("seletorOnibus");
+  const idSelecionado = Number(seletor.value);
+  const rota = onibusData.find(o => o.id === idSelecionado);
 
+  // Cria o mapa
   if (mapaRastreio) mapaRastreio.remove();
-
   mapaRastreio = L.map("mapRastreio").setView([-5.6936, -36.2476], 13);
+
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(mapaRastreio);
 
-  const polyline = L.polyline(rota.pontos, { color: "blue", weight: 4 }).addTo(mapaRastreio);
+  // Desenha a rota
+  const linha = L.polyline(rota.pontos, { color: "blue", weight: 4 }).addTo(mapaRastreio);
   rota.pontos.forEach((p, i) => L.marker(p).addTo(mapaRastreio).bindPopup(`Ponto ${i + 1}`));
-  mapaRastreio.fitBounds(polyline.getBounds());
+  mapaRastreio.fitBounds(linha.getBounds());
 
-  document.getElementById("legendaRastreio").innerHTML = `
+  // Atualiza a legenda abaixo do mapa
+  atualizarLegendaRastreio(rota);
+}
+
+function atualizarLegendaRastreio(rota) {
+  const legenda = document.getElementById("legendaRastreio");
+  legenda.innerHTML = `
     <p><strong>Rota:</strong> ${rota.nome}</p>
     <p><strong>Motorista:</strong> ${rota.motorista}</p>
+    <p><strong>Status:</strong> ${rota.status}</p>
+    <p><strong>Localização:</strong> ${rota.ultima_localizacao}</p>
+    <p><small>Última atualização: ${rota.ultimo_update}</small></p>
   `;
 }
 
@@ -111,8 +160,8 @@ function iniciarMapaRotaDetalhada() {
   }).addTo(mapaRota);
 
   onibusData.forEach(rota => {
-    const poly = L.polyline(rota.pontos, { color: "green", weight: 3 }).addTo(mapaRota);
-    poly.bindPopup(`<strong>${rota.nome}</strong><br>Motorista: ${rota.motorista}`);
+    const linha = L.polyline(rota.pontos, { color: "green", weight: 3 }).addTo(mapaRota);
+    linha.bindPopup(`<strong>${rota.nome}</strong><br>Motorista: ${rota.motorista}`);
   });
 }
 

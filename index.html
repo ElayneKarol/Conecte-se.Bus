@@ -83,21 +83,22 @@
 
   <!-- Tela Rastreio -->
   <section class="tela" id="telaRastreio">
-    <h2>Rastreamento do Ônibus</h2>
+  <h2>Rastreamento do Ônibus</h2>
 
-    <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
-    <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
-      <option value="1">Ônibus Rota Boa Vista</option>
-      <option value="2">Ônibus Rota Caraúbas</option>
-      <option value="3">Ônibus Rota 3 de Agosto</option>
-    </select>
+  <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
+  <select id="seletorOnibus" onchange="iniciarMapaRastreio()">
+    <option value="1">Ônibus Rota Boa Vista</option>
+    <option value="2">Ônibus Rota Caraúbas</option>
+    <option value="3">Ônibus Rota 3 de Agosto</option>
+  </select>
 
-    <div id="mapRastreio" style="height: 300px; border-radius: 10px; margin: 15px 0;"></div>
+  <div id="mapRastreio" style="height: 300px; border-radius: 10px; margin: 15px 0;"></div>
 
-    <div class="card" id="legendaRastreio"></div>
+  <div class="card" id="legendaRastreio"></div>
 
-    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-  </section>
+  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+</section>
+
 
   <!-- Tela de Rotas -->
   <section class="tela" id="telaRotaDetalhada">
