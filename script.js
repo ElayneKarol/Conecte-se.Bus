@@ -1,6 +1,4 @@
-// =========================
 // DADOS LOCAIS (OFFLINE)
-// =========================
 let alunos = [
   { matricula: "admin", senha: "1234", nome: "Administrador", onibus_id: 1 }
 ];
@@ -67,9 +65,7 @@ const onibusData = [
   }
 ];
 
-// =========================
 // NOTIFICAÇÕES SIMULADAS
-// =========================
 const notificacoesData = [
   {
     onibus_id: 1,
@@ -97,15 +93,11 @@ const notificacoesData = [
   }
 ];
 
-
-
 let mapaRastreio = null;
 let marcadorOnibus = null;
 let animacaoInterval = null;
 
-// =========================
 // LOGIN / CADASTRO
-// =========================
 function login() {
   const usuario = document.getElementById("usuario").value;
   const senha = document.getElementById("senha").value;
@@ -137,9 +129,7 @@ function cadastrarAluno() {
   mostrarTela("telaMenu");
 }
 
-// =========================
 // MAPA DE RASTREIO
-// =========================
 function iniciarMapaRastreio() {
   const idSelecionado = Number(document.getElementById("seletorOnibus").value);
   const rota = onibusData.find(o => o.id === idSelecionado);
@@ -205,9 +195,7 @@ function atualizarLegendaRastreio(rota) {
   `;
 }
 
-// =========================
 // TELAS / NAVEGAÇÃO
-// =========================
 function mostrarTela(id) {
   document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(id).classList.add("ativa");
@@ -222,9 +210,7 @@ function enviarFeedback() {
   mostrarTela("telaMenu");
 }
 
-// =========================
 // MAPA DE MAPEAMENTO DE ROTAS
-// =========================
 function iniciarMapaRotaDetalhada() {
   const containerMapa = document.getElementById("mapRotaDetalhada");
   containerMapa.innerHTML = ""; // limpa caso recarregue
@@ -266,17 +252,19 @@ function iniciarMapaRotaDetalhada() {
   }, 300);
 }
 
-// =========================
 // FUNÇÃO DE TROCA DE TELAS
-// =========================
 function mostrarTela(id) {
+  // Oculta todas as telas
   document.querySelectorAll(".tela").forEach(t => t.classList.remove("ativa"));
   document.getElementById(id).classList.add("ativa");
 
+  // Define ações específicas para cada tela
   if (id === "telaRastreio") {
     setTimeout(iniciarMapaRastreio, 200);
   } else if (id === "telaNotificacoes") {
     carregarNotificacoes();
+  } else if (id === "telaRotaDetalhada") {
+    setTimeout(iniciarMapaRotaDetalhada, 300); // <-- chama o mapa de mapeamento
   }
 }
 
