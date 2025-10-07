@@ -1,5 +1,5 @@
 // =========================
-// DADOS LOCAIS
+// DADOS LOCAIS (OFFLINE)
 // =========================
 let alunos = [
   { matricula: "admin", senha: "1234", nome: "Administrador", onibus_id: 1 }
@@ -16,7 +16,7 @@ const onibusData = [
     pontos: [
       [-5.7030, -36.2640],
       [-5.6980, -36.2550],
-      [-5.6936, -36.2476] // Lajes
+      [-5.6936, -36.2476]
     ],
     marcadores: [
       { nome: "Fazenda Boa Vista", coords: [-5.7030, -36.2640] },
@@ -60,6 +60,8 @@ const onibusData = [
 ];
 
 let mapaRastreio = null;
+let marcadorOnibus = null;
+let animacaoInterval = null;
 
 // =========================
 // LOGIN / CADASTRO
@@ -73,6 +75,7 @@ function login() {
   const aluno = alunos.find(a => a.matricula === usuario && a.senha === senha);
   if (aluno) {
     localStorage.setItem("onibusAluno", aluno.onibus_id);
+    alert("✅ Login realizado com sucesso!");
     mostrarTela("telaMenu");
   } else {
     alert("Usuário não encontrado ou senha incorreta.");
@@ -90,7 +93,7 @@ function cadastrarAluno() {
     return alert("Preencha todos os campos!");
 
   alunos.push({ nome, matricula, escola, onibus_id: Number(onibusSelecionado), senha });
-  alert("Cadastro realizado!");
+  alert("Aluno cadastrado com sucesso!");
   mostrarTela("telaMenu");
 }
 
@@ -104,19 +107,44 @@ function iniciarMapaRastreio() {
   if (!rota) return;
 
   if (mapaRastreio) mapaRastreio.remove();
+  if (animacaoInterval) clearInterval(animacaoInterval);
 
   mapaRastreio = L.map("mapRastreio").setView([-5.6936, -36.2476], 13);
+
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(mapaRastreio);
 
-  const linha = L.polyline(rota.pontos, { color: "blue", weight: 4 }).addTo(mapaRastreio);
+  const linha = L.polyline(rota.pontos, { color: "green", weight: 5 }).addTo(mapaRastreio);
 
   rota.marcadores.forEach(ponto => {
-    L.marker(ponto.coords)
-      .addTo(mapaRastreio)
-      .bindPopup(`📍 <b>${ponto.nome}</b>`);
+    L.marker(ponto.coords).addTo(mapaRastreio).bindPopup(`📍 <b>${ponto.nome}</b>`);
   });
+
+  // 🚌 Emoji como marcador
+  const emojiDiv = L.divIcon({
+    html: "🚌",
+    className: "emoji-bus",
+    iconSize: [30, 30],
+    iconAnchor: [15, 15]
+  });
+
+  marcadorOnibus = L.marker(rota.pontos[0], { icon: emojiDiv }).addTo(mapaRastreio);
+
+  let progress = 0;
+  const speed = 0.002; // quanto menor, mais lento
+
+  animacaoInterval = setInterval(() => {
+    const start = rota.pontos[0];
+    const end = rota.pontos[rota.pontos.length - 1];
+
+    const lat = start[0] + (end[0] - start[0]) * progress;
+    const lon = start[1] + (end[1] - start[1]) * progress;
+    marcadorOnibus.setLatLng([lat, lon]);
+
+    progress += speed;
+    if (progress >= 1) progress = 0; // reinicia o trajeto
+  }, 100);
 
   mapaRastreio.fitBounds(linha.getBounds());
   atualizarLegendaRastreio(rota);
@@ -147,4 +175,9 @@ function mostrarTela(id) {
   if (id === "telaRastreio") {
     setTimeout(iniciarMapaRastreio, 200);
   }
+}
+
+function enviarFeedback() {
+  alert("Feedback enviado com sucesso!");
+  mostrarTela("telaMenu");
 }

@@ -83,22 +83,21 @@
 
   <!-- Tela Rastreio -->
   <section class="tela" id="telaRastreio">
-  <h2>Rastreamento do Ônibus</h2>
+    <h2>Rastreamento do Ônibus</h2>
 
-  <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
-  <select id="seletorOnibus" onchange="iniciarMapaRastreio()">
-    <option value="1">Ônibus Rota Boa Vista</option>
-    <option value="2">Ônibus Rota Caraúbas</option>
-    <option value="3">Ônibus Rota 3 de Agosto</option>
-  </select>
+    <label for="seletorOnibus">Selecione o ônibus para rastrear:</label>
+    <select id="seletorOnibus" onchange="atualizarRotaSelecionada()">
+      <option value="1">Ônibus Rota Boa Vista</option>
+      <option value="2">Ônibus Rota Caraúbas</option>
+      <option value="3">Ônibus Rota 3 de Agosto</option>
+    </select>
 
-  <div id="mapRastreio" style="height: 300px; border-radius: 10px; margin: 15px 0;"></div>
+    <div id="mapRastreio" style="height: 300px; border-radius: 10px; margin: 15px 0;"></div>
 
-  <div class="card" id="legendaRastreio"></div>
+    <div class="card" id="legendaRastreio"></div>
 
-  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
-</section>
-
+    <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
+  </section>
 
   <!-- Tela de Rotas -->
   <section class="tela" id="telaRotaDetalhada">
@@ -107,26 +106,6 @@
     <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>
   </section>
   
-  <!-- Tela Rota Detalhada -->
-  <!--<section class="tela" id="telaRotaDetalhada">-->
-    <!--<h2>Rota: Boa Vista → Escola Pedro II</h2>-->
-
-    <!--<div id="mapRotaDetalhada" style="height: 280px; border-radius: 10px; margin-bottom: 20px;"></div>-->
-
-    <!--<div class="card">-->
-      <!--<p><strong>Ponto atual:</strong> Fazenda Boa Vista</p>-->
-      <!--<p><strong>Horário agendado:</strong> 🕒 06:50</p>-->
-      <!--<p><strong>Previsão de chegada:</strong> 🕒 07:10</p>-->
-
-      <!--<div style="margin-top: 10px;">-->
-        <!--<button class="btn" onclick="alert('A rota completa será exibida em breve.')">📍 Visualizar rota</button>-->
-        <!--<button class="btn" onclick="alert('Chegada prevista às 07:10. Nenhum atraso no momento.')">🔔 Atualizações de chegada</button>-->
-      <!--</div>-->
-  <!--  </div>-->
-
-  <!--  <button class="btn" onclick="mostrarTela('telaMenu')">Voltar</button>-->
-  <!-- </section>-->
-
   <!-- Tela Checklist -->
   <section class="tela" id="telaChecklist">
     <h2>Informações de Manutenção</h2>

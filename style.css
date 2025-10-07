@@ -270,3 +270,9 @@ select {
   font-size: 15px;
   line-height: 1.4;
 }
+
+.emoji-bus {
+  font-size: 28px;
+  text-align: center;
+  line-height: 30px;
+}
