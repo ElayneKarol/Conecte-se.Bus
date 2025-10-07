@@ -43,9 +43,15 @@ const onibusData = [
       [-5.7105, -36.2400],
       [-5.7030, -36.2450],
       [-5.6936, -36.2476]
+    ],
+    marcadores: [
+      { nome: "Fazenda 3 de Agosto", coords: [-5.706, -36.265] },
+      { nome: "Sítio Novo", coords: [-5.700, -36.255] },
+      { nome: "Escola Eloy", coords: [-5.692, -36.246] }
     ]
   }
 ];
+let mapaRastreio = null;
 
 // =========================
 // LOGIN / CADASTRO
@@ -110,46 +116,42 @@ function mostrarTela(id) {
   document.getElementById(id).classList.add("ativa");
 
   if (id === "telaRastreio") iniciarMapaRastreio();
-  if (id === "telaRotaDetalhada") iniciarMapaRotaDetalhada();
 }
 
-// =========================
-// MAPAS (LEAFLET)
-// =========================
-let mapaRastreio, mapaRota, marcadorRastreio;
-
+// =======================================================
+// FUNÇÃO PARA INICIAR E ATUALIZAR O MAPA DE RASTREIO
+// =======================================================
 function iniciarMapaRastreio() {
   const seletor = document.getElementById("seletorOnibus");
   const idSelecionado = Number(seletor.value);
   const rota = onibusData.find(o => o.id === idSelecionado);
 
-  // Remove o mapa anterior, se existir
   if (mapaRastreio) mapaRastreio.remove();
 
-  // Centraliza em Lajes/RN
+  // Cria o mapa centralizado em Lajes/RN
   mapaRastreio = L.map("mapRastreio").setView([-5.6936, -36.2476], 13);
-
-  // Adiciona o mapa base
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "© OpenStreetMap contributors"
   }).addTo(mapaRastreio);
 
-  // Adiciona marcador principal de Lajes
-  const marker = L.marker([-5.6936, -36.2476]).addTo(mapaRastreio);
-  marker.bindPopup("📍 <b>Lajes - RN</b><br>Área de cobertura do transporte escolar.").openPopup();
-
-  // Desenha a rota selecionada
+  // Adiciona linha azul do trajeto
   const linha = L.polyline(rota.pontos, { color: "blue", weight: 4 }).addTo(mapaRastreio);
-  rota.pontos.forEach((p, i) => L.circleMarker(p, { color: "red" })
-    .addTo(mapaRastreio)
-    .bindPopup(`📍 Ponto ${i + 1}`));
+
+  // Adiciona marcadores das fazendas e escolas
+  rota.marcadores.forEach(ponto => {
+    const marker = L.marker(ponto.coords).addTo(mapaRastreio);
+    marker.bindPopup(`📍 <b>${ponto.nome}</b>`);
+  });
+
   mapaRastreio.fitBounds(linha.getBounds());
 
-  // Atualiza a legenda logo após montar o mapa
+  // Atualiza a legenda
   atualizarLegendaRastreio(rota);
 }
 
-
+// =======================================================
+// FUNÇÃO PARA ATUALIZAR A LEGENDA ABAIXO DO MAPA
+// =======================================================
 function atualizarLegendaRastreio(rota) {
   const legenda = document.getElementById("legendaRastreio");
   legenda.innerHTML = `
@@ -157,7 +159,7 @@ function atualizarLegendaRastreio(rota) {
     <p><strong>Motorista:</strong> ${rota.motorista}</p>
     <p><strong>Status:</strong> ${rota.status}</p>
     <p><strong>Localização:</strong> ${rota.ultima_localizacao}</p>
-    <p><small>Última atualização: ${rota.ultimo_update}</small></p>
+    <p><small><strong>Última atualização:</strong> ${rota.ultimo_update}</small></p>
   `;
 }
 
@@ -173,6 +175,12 @@ function iniciarMapaRotaDetalhada() {
     const linha = L.polyline(rota.pontos, { color: "green", weight: 3 }).addTo(mapaRota);
     linha.bindPopup(`<strong>${rota.nome}</strong><br>Motorista: ${rota.motorista}`);
   });
+}
+// =======================================================
+// ATUALIZA ROTA AO MUDAR SELEÇÃO
+// =======================================================
+function atualizarRotaSelecionada() {
+  iniciarMapaRastreio();
 }
 
 // =======================================================
